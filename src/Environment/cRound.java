@@ -81,6 +81,7 @@ implements IRound {
     }
 
     public cRound(int _round, ArrayList<SolverAgent> _sAPool, ArrayList<ProposerAgent> _pAPool) {
+        this._roundIndex = _round;
         this.setID(new BigInteger(130, this._srandom).toString(32));
         this.setRoundIndex(_round);
         this.createRound();
@@ -112,6 +113,7 @@ implements IRound {
             i.resetForNewRound();
         }
         );
+        /*
         for (i2 = 0; i2 < FactoryHolder._configManager.getNumberValue("MORTALITY_RATE"); ++i2) {
             if (this._random.nextBoolean()) {
                 if (this._sAgents.isEmpty()) {
@@ -131,6 +133,7 @@ implements IRound {
             this._deadPAgents.add((ProposerAgent)_tmp);
             this._pAgents.remove(_tmp);
         }
+*/
         for (i2 = 0; i2 < this._challenge.size(); ++i2) {
             if (!this._pAgents.contains(this._challenge.get(i2).getAuthor())) {
                 _tmp = this._challenge.get(i2);
@@ -164,13 +167,15 @@ implements IRound {
         int i;
         int _removedAgents = 0;
         for (i = 0; i < this._sAgents.size(); ++i) {
-            if (this._sAgents.get((int)i).getStats()._idledRounds < FactoryHolder._configManager.getNumberValue("SA_MAX_IDLED_ROUNDS")) continue;
+            if (this._sAgents.get((int)i).getStats()._idledRounds < FactoryHolder._configManager.getNumberValue("SA_MAX_IDLED_ROUNDS")) 
+                continue;
             this._deadSAgents.add(this._sAgents.get(i));
             this._sAgents.remove(i);
             ++_removedAgents;
         }
         for (i = 0; i < this._challenge.size(); ++i) {
-            if (this._challenge.get((int)i)._idledRounds < FactoryHolder._configManager.getNumberValue("CH_MAX_IDLE_ROUNDS")) continue;
+            if (this._challenge.get((int)i)._idledRounds < FactoryHolder._configManager.getNumberValue("CH_MAX_IDLE_ROUNDS")) 
+                continue;
             ProposerAgent _reference = this._challenge.get(i).getAuthor();
             this._deadPAgents.add(_reference);
             this._pAgents.remove(_reference);
@@ -189,12 +194,7 @@ implements IRound {
                 Collections.sort(this._challenge);
                 Collections.sort(this._sAgents);
                 this._match();
-                int _startingAgents = this._sAgents.size();
-                if (this._sAgents.size() - _startingAgents > 0) {
-                    FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "This round killed " + (this._sAgents.size() - _startingAgents) + " agents.");
-                } else if (this._sAgents.size() - _startingAgents < 0) {
-                    FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "This round joined " + (this._sAgents.size() - _startingAgents) * -1 + " agents.");
-                }
+               
             } else if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("random")) {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Random based game mode is not enabled in this version.");
             } else if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("skill_based")) {
@@ -208,6 +208,10 @@ implements IRound {
     private void _match() {
         int i;
         ArrayList _touchedCh = (ArrayList)this._challenge.clone();
+        
+        ArrayList<SolverAgent> _idled = new ArrayList();
+        
+        
         for (int _trials = 0; !this.getUnsolvedChallenges(this._challenge).isEmpty() && !this.getUnsolvedSAgents(this._sAgents).isEmpty() && _trials < FactoryHolder._configManager.getNumberValue("NUMBER_OF_CHANCES_AN_AGENT_HAS_TO_TRY_TO_FIND_A_PROBLEM"); ++_trials) {
             i = 0;
             int k = 0;
@@ -226,15 +230,12 @@ implements IRound {
                     continue;
                 }
                 if (this._challenge.get(i).isSolved() || this._sAgents.get(k).getHasSolvedLastChallenge()) continue;
-                if (_canProceedWithChallenge(this._sAgents.get(k), this._challenge.get(i))) {
-                    if (this._challenge.get(i).attemptSolve(this._sAgents.get(k))) {
-                        
+                if (_canProceedWithChallenge(this._sAgents.get(k), this._challenge.get(i))) 
+                {
+                    if (this._challenge.get(i).attemptSolve(this._sAgents.get(k))) 
+                    {
                             this._challenge.get(i).forceAssignSuccess(this._sAgents.get(k));
                             this._sAgents.get(k).setSolvedLastChallenge(true);
-                        
-                        
-                        
-                        
                     }
                     this._sAgents.get(k).setTryHarder(this._sAgents.get(k).getTryHarded() + 1);
                     ++i;
@@ -242,9 +243,22 @@ implements IRound {
                     continue;
                 }
                 ++i;
-                ++this._sAgents.get((int)k).getStats()._idledRounds;
+                k++;
             }
+            
+            
         }
+        
+        for (int l = 0; l < this._sAgents.size(); l++)
+            if (this._sAgents.get(l).getHasSolvedLastChallenge()) {
+                _idled.remove(this._sAgents.get(l));
+                this._sAgents.get(l).getStats()._idledRounds = 0;
+            } else {
+                this._sAgents.get(l).getStats()._idledRounds++;
+                _idled.add(this._sAgents.get(l));
+            }
+        
+        
         if (FactoryHolder._configManager.getStringValue("ENABLE_MAX_IDLED_ROUNDS_CHALLENGE").equals("true")) {
             for (i = 0; i < this._challenge.size(); ++i) {
                 if (((Challenge)_touchedCh.get(i)).equals(this._challenge.get(i))) {
@@ -255,6 +269,7 @@ implements IRound {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "We're not comparing the same challenge here...");
             }
         }
+
     }
 
     public static boolean _canProceedWithChallenge(SolverAgent _agent, Challenge _skillMap) {

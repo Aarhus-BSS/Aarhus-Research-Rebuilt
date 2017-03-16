@@ -116,11 +116,13 @@ implements Comparable<SolverAgent> {
         return _total;
     }
 
-    private ArrayList<cSkill> _mutatePositiveSkills() {
+    private ArrayList<cSkill> _mutatePositiveSkills() 
+    {
         ArrayList _mutatedSkills = (ArrayList)this._skills.clone();
         int _outExp = 0;
         int _curExp = 0;
-        for (int i = 0; i < this._skills.size(); ++i) {
+        for (int i = 0; i < this._skills.size(); ++i) 
+        {
             _curExp = this._skills.get(i).getExperience();
             _outExp = _curExp + FactoryHolder._configManager.getNumberValue("SA_MUTATION_RATE_VALUE") * _curExp / 100;
             ((cSkill)_mutatedSkills.get(i)).setExperience(_outExp);
@@ -128,7 +130,8 @@ implements Comparable<SolverAgent> {
         return _mutatedSkills;
     }
 
-    private cSkill _mutateSkill(cSkill _oldSkill, String _rateoSign) {
+    private cSkill _mutateSkill(cSkill _oldSkill, String _rateoSign)
+    {
         cSkill _newSkill = _oldSkill.clone();
         int _outExp = 0;
         int _curExp = _oldSkill.getExperience();
