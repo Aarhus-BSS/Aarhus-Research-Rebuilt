@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-import Agents.Group.GroupFormer;
+import Agents.Group.Group;
 import Agents.Group._MODEL_SETUP;
 import Agents.ProposerAgent;
 import Agents.SolverAgent;
@@ -35,15 +35,27 @@ public class groupsTest {
         FactoryHolder._logManager.initializeSession("session");
         FactoryHolder._logManager.setDebugMode(false);
         
-        ArrayList<SolverAgent> _solvers = new ArrayList();
-        for (int i = 0; i < 10; i++)
-            _solvers.add(new SolverAgent());
+        int _runs = 100;
         
-        ProposerAgent _proposer = new ProposerAgent();
-        _proposer._generateProblem();
-        
-        
-        GroupFormer _former = new GroupFormer(_solvers, _MODEL_SETUP.MODEL_1A);
-        _former.attemptSolve(0, _proposer.getChallengeProposed());
+        for (int x = 0; x < _runs; x++)
+        {
+            ArrayList<SolverAgent> _solvers = new ArrayList();
+            for (int i = 0; i < 50; i++)
+                _solvers.add(new SolverAgent());
+
+            ProposerAgent _proposer = new ProposerAgent();
+            _proposer._generateProblem();
+
+            Group _group = new Group(_solvers, _proposer.getChallengeProposed());
+            if (_group.getMembersCount() >= 1)
+            {
+                System.out.println("Total Experience: " + _group.getTotalExperience());
+            } else {
+                System.out.println(_group + " disbanded (no members)");
+                _group.disband();
+            }
+
+            _group.attemptSolve();
+        }
     }
 }

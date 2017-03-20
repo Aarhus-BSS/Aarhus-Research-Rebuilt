@@ -18,6 +18,7 @@ implements Comparable<SolverAgent> {
     private Random _random = new Random();
     private boolean _solvedLastChallenge = false;
     private int _tryHardedLastChallenge = 0;
+    public boolean _isInGroup = false;
 
     public void _setupAgent() {
         int i;
@@ -31,6 +32,7 @@ implements Comparable<SolverAgent> {
         this._stats._successTrials = 0;
         this._stats._trials = 0;
         this._stats._rejected = 0;
+        this._isInGroup = false;
     }
 
     public void _setupAgent(ArrayList<cSkill> _skills) {
@@ -39,6 +41,7 @@ implements Comparable<SolverAgent> {
         this._stats._successTrials = 0;
         this._stats._trials = 0;
         this._stats._rejected = 0;
+        this._isInGroup = false;
         this._skills = (ArrayList)_skills.clone();
     }
 
@@ -49,6 +52,7 @@ implements Comparable<SolverAgent> {
     public void resetForNewRound() {
         this._solvedLastChallenge = false;
         this._tryHardedLastChallenge = 0;
+        this._isInGroup = false;
     }
 
     public void setSolvedLastChallenge(boolean _status) {
