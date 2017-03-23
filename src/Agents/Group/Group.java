@@ -158,7 +158,7 @@ public class Group
     
     private static double sigmoid(double x) 
     {
-        return (1 / (1 + Math.pow(Math.E, (x))));
+        return (1 / (1 + Math.pow(Math.E, (-1 * x))));
     }
     
     public int getMembersCount()
@@ -192,9 +192,12 @@ public class Group
         {
             int[] _skills = this.getTotalSkillMap();
             double[] _saturationPoints = new double[_skills.length];
-
+            
             for (int i = 0; i < _saturationPoints.length; i++)
-               _saturationPoints[i] = sigmoid(_skills[i] - this._formedFor.getDifficultyMap()[i]);
+               _saturationPoints[i] = sigmoid((double)(_skills[i] - this._formedFor.getDifficultyMap()[i]) / 10);
+            
+            
+            
         } else
             FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, this + " can't solve, not satisfied parameters.");
         
@@ -219,6 +222,8 @@ public class Group
     public int[] getTotalSkillMap()
     {
         int[] _total = new int[FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size()];
+        
+        // Include specialization index level to ignore avg
         
         for (int i = 0; i < this._groupMembers.size(); i++) 
             for (int k = 0; k < FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size(); k++)

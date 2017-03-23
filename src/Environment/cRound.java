@@ -45,7 +45,12 @@ implements IRound {
             if (!this._pAgents.isEmpty()) {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "New pagent clone creation:");
                 int _randomPick = this._random.nextInt(this._pAgents.size());
-                this._pAgents.add(this._pAgents.get(_randomPick).clone());
+                
+                if (FactoryHolder._configManager.getStringValue("PA_NOT_A_CLONE").equals("true"))
+                    this._pAgents.add(new ProposerAgent());
+                else
+                    this._pAgents.add(this._pAgents.get(_randomPick).clone());
+                
                 this._pAgents.get(this._pAgents.size() - 1)._generateProblem();
                 this._challenge.add(this._pAgents.get(this._pAgents.size() - 1).getChallengeProposed());
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, this._pAgents.get(this._pAgents.size() - 1).toString());
@@ -67,12 +72,18 @@ implements IRound {
                 int _randomPick = this._random.nextInt(this._sAgents.size());
                 if (FactoryHolder._configManager.getStringValue("SA_ENABLE_MAX_CLONATION").equals("true")) {
                     if (this._sAgents.get((int)_randomPick).getStats()._clonedTimes <= FactoryHolder._configManager.getNumberValue("SA_MAX_CLONATIONS")) {
-                        this._sAgents.add(this._sAgents.get(_randomPick).clone());
+                        if (FactoryHolder._configManager.getStringValue("SA_NOT_A_CLONE").equals("true"))
+                            this._sAgents.add(new SolverAgent());
+                        else
+                            this._sAgents.add(this._sAgents.get(_randomPick).clone());
                     } else {
                         FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Max clonations for " + this._sAgents.get(_randomPick) + " reached, skipping.");
                     }
                 } else {
-                    this._sAgents.add(this._sAgents.get(_randomPick).clone());
+                    if (FactoryHolder._configManager.getStringValue("SA_NOT_A_CLONE").equals("true"))
+                        this._sAgents.add(new SolverAgent());
+                    else
+                        this._sAgents.add(this._sAgents.get(_randomPick).clone());
                 }
             } else {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Trying to clone a sagent, but there aren't...");
@@ -191,12 +202,17 @@ implements IRound {
                 this._sGenerationChanceStep();
             }
             if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("sorted")) {
+                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_NORMAL, "Sorting pools...");
                 Collections.sort(this._challenge);
                 Collections.sort(this._sAgents);
                 this._match();
                
             } else if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("random")) {
-                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Random based game mode is not enabled in this version.");
+                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_NORMAL, "Randomizing pools...");
+                Collections.shuffle(this._challenge);
+                Collections.shuffle(this._sAgents);
+                this._match();
+                
             } else if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("skill_based")) {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Skill based game mode is not enabled in this version.");
             } else {

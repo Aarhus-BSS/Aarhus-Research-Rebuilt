@@ -35,7 +35,9 @@ public class ProposerAgent {
         }
         for (i = 0; i < FactoryHolder._configManager.getNumberValue("MAXIMUM_RANDOM_REQUIREMENTS_SELECTED"); ++i) {
             int _randomAccessSkill = this._random.nextInt(FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size());
-            _difficultyMap[i] = this._random.nextInt(FactoryHolder._configManager.getNumberValue("MAXIMUM_RANDOM_EXPERIENCE_PER_REQUIREMENT") + 1);
+            _difficultyMap[i] = this._random.nextInt((FactoryHolder._configManager.getNumberValue("MAXIMUM_RANDOM_EXPERIENCE_PER_REQUIREMENT") -
+                                                      FactoryHolder._configManager.getNumberValue("MINIMUM_RANDOM_EXPERIENCE_PER_REQUIREMENT")) + 1) +
+                                                      FactoryHolder._configManager.getNumberValue("MINIMUM_RANDOM_EXPERIENCE_PER_REQUIREMENT");
         }
         for (i = 0; i < _difficultyMap.length; ++i) {
             _requirements.add(new cSkill(FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").get(i).toString()));

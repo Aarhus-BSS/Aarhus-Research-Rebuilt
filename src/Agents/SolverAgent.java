@@ -19,6 +19,7 @@ implements Comparable<SolverAgent> {
     private boolean _solvedLastChallenge = false;
     private int _tryHardedLastChallenge = 0;
     public boolean _isInGroup = false;
+    public int _specializationIndex = 0;
 
     public void _setupAgent() {
         int i;
@@ -26,7 +27,9 @@ implements Comparable<SolverAgent> {
             this._skills.add(new cSkill(FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").get(i).toString()));
         }
         for (i = 0; i < FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size(); ++i) {
-            this._skills.get(i).setExperience(this._random.nextInt(FactoryHolder._configManager.getNumberValue("SA_MAXIMUM_EXPERIENCE") + 1));
+            this._skills.get(i).setExperience(this._random.nextInt((FactoryHolder._configManager.getNumberValue("SA_MAXIMUM_EXPERIENCE") -
+                                              FactoryHolder._configManager.getNumberValue("SA_MINIMUM_EXPERIENCE")) + 1) + 
+                                              FactoryHolder._configManager.getNumberValue("SA_MINIMUM_EXPERIENCE"));
         }
         this._stats._money = 0;
         this._stats._successTrials = 0;
