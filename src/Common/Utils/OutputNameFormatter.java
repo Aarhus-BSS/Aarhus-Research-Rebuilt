@@ -17,7 +17,7 @@ import java.util.Random;
  */
 public class OutputNameFormatter 
 {
-    private static final String[] _knownFlags = {"{DATETIME}", "{DAY}", "{HOUR}", "{SESSIONID}", "{USERNAME}", "{OS}" };
+    private static final String[] _knownFlags = {"{DATETIME}", "{DAY}", "{HOUR}", "{SESSIONID}", "{USERNAME}", "{OS}", "{HAS_GROUPS}", "{HAS_REPUTATION}" };
     
     private static String _getParameterValue(String _flag)
     {
@@ -36,6 +36,14 @@ public class OutputNameFormatter
             return System.getProperty("user.name");
         else if (_flag.equals(_knownFlags[5])) // OPERATIVE SYSTEM
             return System.getProperty("os.name");
+        else if (_flag.equals(_knownFlags[6]))
+            if (FactoryHolder._configManager.getStringValue("ENABLE_GROUPS").equals("true"))
+                return "WithGroups";
+            else return "";
+        else if (_flag.equals(_knownFlags[7]))
+            if (FactoryHolder._configManager.getStringValue("ENABLE_REPUTATION").equals("true"))
+                return "WithReputation";
+            else return "";
         
         return String.valueOf(new Random().nextInt());
     }

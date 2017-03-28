@@ -5,7 +5,6 @@ package Agents;
 
 import Agents.Properties.cSkill;
 import Agents.Properties.cStatistics;
-import Common.Configuration.ConfigManager;
 import Common.Logging.ILogManager;
 import auresearch.FactoryHolder;
 import java.util.ArrayList;
@@ -19,9 +18,10 @@ implements Comparable<SolverAgent> {
     private boolean _solvedLastChallenge = false;
     private int _tryHardedLastChallenge = 0;
     public boolean _isInGroup = false;
-    public int _specializationIndex = 0;
+    public boolean _solvedLastChallengeAsGroup = false;
 
-    public void _setupAgent() {
+    public void _setupAgent() 
+    {
         int i;
         for (i = 0; i < FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size(); ++i) {
             this._skills.add(new cSkill(FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").get(i).toString()));
@@ -38,7 +38,8 @@ implements Comparable<SolverAgent> {
         this._isInGroup = false;
     }
 
-    public void _setupAgent(ArrayList<cSkill> _skills) {
+    public void _setupAgent(ArrayList<cSkill> _skills) 
+    {
         FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Creating new Agent (prebuilt skills)");
         this._stats._money = 0;
         this._stats._successTrials = 0;
@@ -56,6 +57,7 @@ implements Comparable<SolverAgent> {
         this._solvedLastChallenge = false;
         this._tryHardedLastChallenge = 0;
         this._isInGroup = false;
+        this._solvedLastChallengeAsGroup = false;
     }
 
     public void setSolvedLastChallenge(boolean _status) {

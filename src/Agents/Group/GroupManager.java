@@ -31,36 +31,69 @@ public class GroupManager
     private int _groupedAgents = 0;
     private int _roundReference = -1;
     
-    private boolean _saturatedPool(ArrayList<SolverAgent> _solvers)
+    private boolean _saturedPool(ArrayList<SolverAgent> _solvers)
     {
-        int _inGroups = 0;
-        for (int i = 0; i < _solvers.size(); i++)
-            if (_solvers.get(i)._isInGroup == true)
-                _inGroups++;
-        
-        this._groupedAgents = _inGroups;
-        
-        if (_inGroups == _solvers.size())
-            return true;
+        if (FactoryHolder._configManager.getStringValue("LIMIT_GROUPS_COUNT").equals("true"))
+            if (this._groups.size() >= FactoryHolder._configManager.getNumberValue("MAXIMUM_EXISTING_GROUPS"))
+                return true;
         
         return false;
+    }
+    
+    private int _saturationScore = 0;
+    
+    private int _getSaturationLimit(ArrayList<SolverAgent> _solvers)
+    {
+        return _solvers.size() / 2;
     }
     
     public GroupManager(ArrayList<SolverAgent> _solvers, ArrayList<Challenge> _problems, int _round)
     {
         this._roundReference = _round;
-        int _challengeIndex = 0;
+        int _roundCounter = 0;
+        int _solved = 0;
         
-        while (!this._saturatedPool(_solvers) 
-                && _challengeIndex <= _problems.size())
+        for (int _challengeIndex = 0; _challengeIndex < _problems.size(); _challengeIndex++) 
         {
-            _groupNode _tmp = new _groupNode();
-            _tmp._group = new Group(_solvers, _problems.get(_challengeIndex));
-            _tmp._problem = _problems.get(_challengeIndex);
-            _tmp._challengeIndex = _challengeIndex;
+            _solvers.forEach((i) -> {
+                i.resetForNewRound();
+                this._saturationScore = 0;
+            });
             
-            this._groups.add(_tmp);
+            if (!_problems.get(_challengeIndex).isSolved())
+            {
+                while (!this._saturedPool(_solvers))
+                {
+                    _groupNode _tmp = new _groupNode();
+                    _tmp._group = new Group(_solvers, _problems.get(_challengeIndex), _MODEL_SETUP.fromString(FactoryHolder._configManager.getStringValue("GROUP_MODEL")));
+                    _tmp._problem = _problems.get(_challengeIndex);
+                    _tmp._challengeIndex = _challengeIndex;
+
+                    if (_tmp._group._satured())
+                        this._saturationScore++;
+                    else {
+                        this._groups.add(_tmp);
+                        _roundCounter++;
+                    }
+
+                    if (this._saturationScore >= this._getSaturationLimit(_solvers))
+                        break;
+                }
+
+                for (int i = 0; i < this._groups.size(); i++)
+                    if (!this._groups.get(i)._problem.isSolved())
+                        if (this._groups.get(i)._group.attemptSolve()) {
+                            _solved++;
+                            for (SolverAgent x: this._groups.get(i)._group.getMembers())
+                                _problems.get(_challengeIndex).forceAssignSuccess(x);
+                            _problems.get(_challengeIndex)._isGroupSolved = true;
+                        }
+
+                for (int i = 0; i < this._groups.size(); i++)
+                    this._groups.get(i)._group.disband();
+            }
         }
+        
     }
     
     public int getGroupsCount()

@@ -130,15 +130,14 @@ public class graphStatsExport
 	domainAxis2.setTickUnit(new NumberTickUnit(5));
         
         try {
-            // create the image file on the desktop // 1400, 700
             ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
-                                                    + OutputNameFormatter.parseName(FactoryHolder._graphNames[1])), agentsPerRoundChart, 3000, 1000);
+                                                    + OutputNameFormatter.parseName(FactoryHolder._graphNames[1])), agentsPerRoundChart, 3000, 2000);
 
             ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
-                                                    + OutputNameFormatter.parseName(FactoryHolder._graphNames[0])), avgProbRoundsChart, 3000, 1000);
+                                                    + OutputNameFormatter.parseName(FactoryHolder._graphNames[0])), avgProbRoundsChart, 3000, 2000);
 			
             ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
-                                                    + OutputNameFormatter.parseName(FactoryHolder._graphNames[3])), compositeChart, 3000, 1000);
+                                                    + OutputNameFormatter.parseName(FactoryHolder._graphNames[3])), compositeChart, 3000, 2000);
         } catch (IOException e1) {
             e1.printStackTrace();
 	}

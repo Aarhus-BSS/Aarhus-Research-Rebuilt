@@ -5,7 +5,6 @@ package Agents;
 
 import Agents.Properties.cSkill;
 import Challenge.Challenge;
-import Common.Configuration.ConfigManager;
 import Common.Logging.ILogManager;
 import auresearch.FactoryHolder;
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class ProposerAgent {
     public void _generateProblem() {
         int i;
         int[] _difficultyMap = new int[FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size()];
-        ArrayList<cSkill> _requirements = new ArrayList<cSkill>();
+        ArrayList<cSkill> _requirements = new ArrayList<>();
         for (i = 0; i < _difficultyMap.length; ++i) {
             _difficultyMap[i] = 0;
         }

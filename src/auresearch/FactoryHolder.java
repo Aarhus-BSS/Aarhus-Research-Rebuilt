@@ -33,14 +33,14 @@ public class FactoryHolder
     public static ConfigManager     _configManager = null;
     
     // Documentation (XLS & Graphics) are going to follow these names, pay attention to the flags {}
-    public static String[] _docNames = {"ProblemsReport.{DATETIME}-{OS}", 
-        "AgentReport.{DATETIME}-{OS}", "AVGReport.{DATETIME}-{OS}", 
-        "DetailReport.{DATETIME}-{OS}", "CompositeReport.{DATETIME}-{OS}",
-        "GroupReport.{DATETIME}-{OS}"};
+    public static String[] _docNames = {"ProblemsReport.{DATETIME}-{HAS_GROUPS}", 
+        "AgentReport.{DATETIME}-{HAS_GROUPS}", "AVGReport.{DATETIME}-{HAS_GROUPS}", 
+        "DetailReport.{DATETIME}-{HAS_GROUPS}", "CompositeReport.{DATETIME}-{HAS_GROUPS}",
+        "GroupReport.{DATETIME}-{HAS_GROUPS}"};
     
-    public static String[] _graphNames = {"AVGAgentsPerRound.{DATETIME}-{OS}.png", 
-        "AgentsPerRound.{DATETIME}-{OS}.png", "SAgentsSolvedPerRound.{DATETIME}-{OS}.png", 
-        "CompositeEXP.{DATETIME}-{OS}.png", "CompositeProblems.{DATETIME}-{OS}.png" };
+    public static String[] _graphNames = {"AVGAgentsPerRound.{DATETIME}-{HAS_GROUPS}.png", 
+        "AgentsPerRound.{DATETIME}-{HAS_GROUPS}.png", "SAgentsSolvedPerRound.{DATETIME}-{HAS_GROUPS}.png", 
+        "CompositeEXP.{DATETIME}-{HAS_GROUPS}.png", "CompositeProblems.{DATETIME}-{HAS_GROUPS}.png" };
     
     public static ChartPanel[] _graphsRender = null;
     

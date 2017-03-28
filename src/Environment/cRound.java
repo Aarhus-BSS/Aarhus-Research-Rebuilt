@@ -4,6 +4,7 @@
 package Environment;
 
 import Agents.Group.Group;
+import Agents.Group.GroupManager;
 import Agents.Properties.cSkill;
 import Agents.Properties.cStatistics;
 import Agents.ProposerAgent;
@@ -38,6 +39,7 @@ implements IRound {
     private ArrayList<Group> _groupPool = new ArrayList();
     private ArrayList<Challenge> _challenge = new ArrayList();
     public roundStatsHolder _stats = new roundStatsHolder();
+    private GroupManager _groupHandler = null;
 
     private void _pGenerationChanceStep() {
         int _curChance = this._random.nextInt(100);
@@ -202,13 +204,13 @@ implements IRound {
                 this._sGenerationChanceStep();
             }
             if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("sorted")) {
-                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_NORMAL, "Sorting pools...");
+                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Sorting pools...");
                 Collections.sort(this._challenge);
                 Collections.sort(this._sAgents);
                 this._match();
                
             } else if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("random")) {
-                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_NORMAL, "Randomizing pools...");
+                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Randomizing pools...");
                 Collections.shuffle(this._challenge);
                 Collections.shuffle(this._sAgents);
                 this._match();
@@ -221,7 +223,8 @@ implements IRound {
         }
     }
 
-    private void _match() {
+    private void _match() 
+    {
         int i;
         ArrayList _touchedCh = (ArrayList)this._challenge.clone();
         
@@ -285,6 +288,9 @@ implements IRound {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "We're not comparing the same challenge here...");
             }
         }
+        
+        if (FactoryHolder._configManager.getStringValue("ENABLE_GROUPS").equals("true"))
+            this._groupHandler = new GroupManager(this._sAgents, this._challenge, this._roundIndex);
 
     }
 

@@ -6,6 +6,7 @@
 
 import Agents.Group.Group;
 import Agents.Group._MODEL_SETUP;
+import static Agents.Group._MODEL_SETUP.MODEL_1A;
 import Agents.ProposerAgent;
 import Agents.SolverAgent;
 import Challenge.Challenge;
@@ -46,7 +47,7 @@ public class groupsTest {
             ProposerAgent _proposer = new ProposerAgent();
             _proposer._generateProblem();
 
-            Group _group = new Group(_solvers, _proposer.getChallengeProposed());
+            Group _group = new Group(_solvers, _proposer.getChallengeProposed(), MODEL_1A);
             if (_group.getMembersCount() >= 1)
             {
                 System.out.println("Total Experience: " + _group.getTotalExperience());

@@ -20,4 +20,22 @@ public enum _MODEL_SETUP
     {
         
     }
+    
+    public static _MODEL_SETUP fromString(String _from)
+    {
+        switch (_from.toUpperCase()) 
+        {
+            case "1A":
+                return MODEL_1A;
+            case "1B":
+                return MODEL_1B;
+            case "1A_WR":
+                return MODEL_1A_WR;
+            case "1B_WR":
+                return MODEL_1B_WR;
+                
+            default:
+                return MODEL_1A;
+        }
+    }
 }

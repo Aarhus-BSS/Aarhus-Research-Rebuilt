@@ -8,6 +8,7 @@ package Agents.Group;
 import Agents.SolverAgent;
 import Challenge.Challenge;
 import Common.Logging.ILogManager;
+import Common.Math.SigmoidedThrows;
 import auresearch.FactoryHolder;
 import java.util.ArrayList;
 import java.util.Random;
@@ -64,36 +65,12 @@ public class Group
     
     private int _requirementIndex = 0;
     
-    public Group(ArrayList<SolverAgent> _solvers, Challenge _challenge)
+    public boolean _satured()
     {
-        this._formedFor = _challenge;
-        this._requirementIndex = 0;
-        int[] _actualRequirements = this._formedFor.getDifficultyMap();
-        this._coveredMap = new boolean[this._formedFor.getDifficultyMap().length];
+        if (this._groupMembers.size() < FactoryHolder._configManager.getNumberValue("MINIMUM_MEMBERS_TO_ATTEMPT_SOLVE"))
+            return true;
         
-        for (int i = 0; i < _solvers.size(); i++)
-        {
-            if ( _requirementIndex <= (FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size() - 1))
-            {
-                if (this._coveredMap[_requirementIndex] != true)
-                {
-                        int[] _agentSkills = this._extractedSkills(_solvers.get(i), this._formedFor.getDifficultyMap().length);
-
-                        if (_agentSkills[_requirementIndex] >= _actualRequirements[_requirementIndex])
-                        {
-                            this._countCoveredRequirements(_solvers.get(i));
-
-                            _solvers.get(i)._isInGroup = true;
-                            this._groupMembers.add(_solvers.get(i));
-                            this._requirementIndex++;
-                        }
-                } else
-                    _requirementIndex++;
-            } else 
-                break;
-        }
-        
-        this._coveredRequirements = (this._requirementIndex + 1) == this._formedFor.getDifficultyMap().length;
+        return false;
     }
     
     public Group(ArrayList<SolverAgent> _solvers, Challenge _challenge, _MODEL_SETUP _model)
@@ -114,7 +91,10 @@ public class Group
                         {
                             int[] _agentSkills = this._extractedSkills(_solvers.get(i), this._formedFor.getDifficultyMap().length);
 
-                            if (_agentSkills[_requirementIndex] >= _actualRequirements[_requirementIndex])
+                            if (_agentSkills[_requirementIndex] >= _actualRequirements[_requirementIndex]
+                                && _solvers.get(i)._isInGroup != true
+                                && _solvers.get(i)._solvedLastChallengeAsGroup != true
+                                && i != _solvers.size())
                             {
                                 this._countCoveredRequirements(_solvers.get(i));
 
@@ -122,10 +102,12 @@ public class Group
                                 this._groupMembers.add(_solvers.get(i));
                                 this._requirementIndex++;
                             }
-                        } else
+                        } else {
                             _requirementIndex++;
-                    } else 
+                        }
+                    } else {
                         break;
+                    }
                 }
                 break;
                 
@@ -156,11 +138,6 @@ public class Group
         return false;
     }
     
-    private static double sigmoid(double x) 
-    {
-        return (1 / (1 + Math.pow(Math.E, (-1 * x))));
-    }
-    
     public int getMembersCount()
     {
         return this._groupMembers.size();
@@ -171,16 +148,19 @@ public class Group
         for (int i = 0; i < this._groupMembers.size(); i++)
         {
             this._groupMembers.get(i)._isInGroup = false;
-            this._groupMembers.remove(i);
+            //this._groupMembers.remove(i);
         }
         
-        this._coveredRequirements = false;
+        //this._coveredRequirements = false;
     }    
     
     public boolean canTryAnyway()
     {
-        if (FactoryHolder._configManager.getStringValue("ALLOW_UNCOVERED_REQUIREMENTS_TRIAL").equals("true")
-                && this._groupMembers.size() >= FactoryHolder._configManager.getNumberValue("MINIMUM_MEMBERS_TO_ATTEMPT_SOLVE"))
+        if (FactoryHolder._configManager.getStringValue("ALLOW_UNCOVERED_REQUIREMENTS_TRIAL").equals("false"))
+            if (!this._coveredRequirements)
+                return false;
+            
+        if (this._groupMembers.size() >= FactoryHolder._configManager.getNumberValue("MINIMUM_MEMBERS_TO_ATTEMPT_SOLVE"))
             return true;
         
         return false;
@@ -190,16 +170,11 @@ public class Group
     {
         if (this.canTryAnyway())
         {
-            int[] _skills = this.getTotalSkillMap();
-            double[] _saturationPoints = new double[_skills.length];
+            double[] _saturationPoints = SigmoidedThrows.getSigmoidMap(this._formedFor.getDifficultyMap(), this.getTotalSkillMap());
             
-            for (int i = 0; i < _saturationPoints.length; i++)
-               _saturationPoints[i] = sigmoid((double)(_skills[i] - this._formedFor.getDifficultyMap()[i]) / 10);
-            
-            
-            
-        } else
-            FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, this + " can't solve, not satisfied parameters.");
+            if (SigmoidedThrows.throwOnSigmoid(_saturationPoints))
+                return true;
+        }
         
         return false;
     }
@@ -223,14 +198,20 @@ public class Group
     {
         int[] _total = new int[FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size()];
         
-        // Include specialization index level to ignore avg
-        
-        for (int i = 0; i < this._groupMembers.size(); i++) 
-            for (int k = 0; k < FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size(); k++)
-                _total[k] += this._groupMembers.get(i).getSkills().get(k).getExperience();
-        
-        for (int i = 0; i < _total.length; i++)
-            _total[i] /= this._groupMembers.size();
+        if (FactoryHolder._configManager.getStringValue("ENABLE_INDIVIDUAL_SKILL_COVERAGE").equals("true"))
+        {
+            for (int i = 0; i < this._groupMembers.size(); i++)
+                 for (int k = 0; k < FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size(); k++)
+                     if (_total[k] < this._groupMembers.get(i).getSkills().get(k).getExperience())
+                         _total[k] = this._groupMembers.get(i).getSkills().get(k).getExperience();
+        } else {
+            for (int i = 0; i < this._groupMembers.size(); i++) 
+                for (int k = 0; k < FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size(); k++)
+                    _total[k] += this._groupMembers.get(i).getSkills().get(k).getExperience();
+
+            for (int i = 0; i < _total.length; i++)
+                _total[i] /= this._groupMembers.size();
+        }
         
         return _total;
     }

@@ -25,6 +25,7 @@ implements Comparable<Challenge> {
     private ArrayList<SolverAgent> _tryHarderRejected = new ArrayList();
     private boolean _isSolved = false;
     public int _idledRounds = 0;
+    public boolean _isGroupSolved = false;
 
     private int _getBound() {
         if (this._difficultyMap.length <= FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size()) {
@@ -88,6 +89,7 @@ implements Comparable<Challenge> {
         this._calculateTotalDifficulty();
         this._reward = this._totalDifficulty / 2;
         this._author = _author;
+        this._isGroupSolved = false;
     }
 
     private void _mutatePositive() {
@@ -147,6 +149,7 @@ implements Comparable<Challenge> {
         this._tryHarders.clear();
         this._isSolved = false;
         this._idledRounds = 0;
+        this._isGroupSolved = false;
     }
 
     @Override
@@ -158,9 +161,11 @@ implements Comparable<Challenge> {
         double _chance = 1.0;
         double _randomer = 0.0;
         int i = 0;
-        if (i < this._getBound()) {
+        if (i < this._getBound()) 
+        {
             _randomer = this._random.nextDouble();
-            if (_agent.getSkill(this._skillTypes.get(i).getName()).getExperience() != 0) {
+            if (_agent.getSkill(this._skillTypes.get(i).getName()).getExperience() != 0) 
+            {
                 if (_agent.getSkill(this._skillTypes.get(i).getName()).getExperience() - this._difficultyMap[i] >= FactoryHolder._configManager.getNumberValue("CH_MINIMAL_DIFFERENCE") && !FactoryHolder._configManager.getStringValue("CH_EASYREJECTOR").equals("true")) {
                     this._solvers.add(_agent);
                     _agent.giveReward(this._reward);
