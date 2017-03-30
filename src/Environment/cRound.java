@@ -41,6 +41,11 @@ implements IRound {
     public roundStatsHolder _stats = new roundStatsHolder();
     private GroupManager _groupHandler = null;
 
+    public ArrayList<Challenge> getDeadChallenges()
+    {
+        return this._deadChallenges;
+    }
+    
     private void _pGenerationChanceStep() {
         int _curChance = this._random.nextInt(100);
         if (_curChance >= FactoryHolder._configManager.getNumberValue("PA_EXPONENTIAL_GENERATION_CHANCE")) {

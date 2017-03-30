@@ -26,6 +26,7 @@ implements Comparable<Challenge> {
     private boolean _isSolved = false;
     public int _idledRounds = 0;
     public boolean _isGroupSolved = false;
+    public int _reputationScore = 0;
 
     private int _getBound() {
         if (this._difficultyMap.length <= FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size()) {
@@ -90,34 +91,47 @@ implements Comparable<Challenge> {
         this._reward = this._totalDifficulty / 2;
         this._author = _author;
         this._isGroupSolved = false;
-    }
-
-    private void _mutatePositive() {
-        int _rate = this._random.nextInt(FactoryHolder._configManager.getNumberValue("CH_MUTATION_RATE") + 1);
-        for (int i = 0; i < this._getBound(); ++i) {
-            int[] arrn = this._difficultyMap;
-            int n = i;
-            arrn[n] = arrn[n] + _rate * this._difficultyMap[i] / 100;
-        }
-    }
-
-    private void _mutateNegative() {
-        int _rate = this._random.nextInt(FactoryHolder._configManager.getNumberValue("CH_MUTATION_RATE") + 1);
-        for (int i = 0; i < this._getBound(); ++i) {
-            int[] arrn = this._difficultyMap;
-            int n = i;
-            arrn[n] = arrn[n] - _rate * this._difficultyMap[i] / 100;
-        }
+        this._reputationScore = this._random.nextInt(100);
     }
 
     private void _mutateNegative(int _index) {
+        int _curExp = this._difficultyMap[_index];
+        int _newExp = 0;
         int _rate = this._random.nextInt(FactoryHolder._configManager.getNumberValue("CH_MUTATION_RATE") + 1);
-        this._difficultyMap[_index] = (this._difficultyMap[_index] - _rate) * (this._difficultyMap[_index] / 100);
+        _newExp = _curExp - _rate * _curExp / 100;
+        this._difficultyMap[_index] = _newExp;
     }
 
     private void _mutatePositive(int _index) {
+        int _curExp = this._difficultyMap[_index];
+        int _newExp = 0;
         int _rate = this._random.nextInt(FactoryHolder._configManager.getNumberValue("CH_MUTATION_RATE") + 1);
-        this._difficultyMap[_index] = (this._difficultyMap[_index] + _rate) * (this._difficultyMap[_index] / 100);
+        _newExp = _curExp + _rate * _curExp / 100;
+        this._difficultyMap[_index] = _newExp;
+    }
+    
+    public void mutateReputation(int _original)
+    {
+        // MUTATION GIVES 0 FOR SOME REASON, HERE'S THE BUG FOR COMPOSITE CHART
+        if (FactoryHolder._configManager.getStringValue("ENABLE_REPUTATION").equals("true"))
+            if (FactoryHolder._configManager.getStringValue("CH_ENABLE_MUTATION").equals("true"))
+            {
+                int _rate = this._random.nextInt(FactoryHolder._configManager.getNumberValue("CH_MUTATION_RATE") + 1);
+                if (FactoryHolder._configManager.getStringValue("CH_MUTATION_SIGN").equals("+/-")) {
+
+                    boolean _throw = this._random.nextBoolean();
+                    if (_throw)
+                        this._reputationScore = (_original + _rate) * (_original / 100);
+                    else
+                        this._reputationScore = (_original - _rate) * (_original / 100);
+
+                } else if (FactoryHolder._configManager.getStringValue("CH_MUTATION_SIGN").equals("-")) {
+                    this._reputationScore = (_original - _rate) * (_original / 100);
+                } else if (FactoryHolder._configManager.getStringValue("CH_MUTATION_SIGN").equals("+")) {
+                    this._reputationScore = (_original + _rate) * (_original / 100);
+                } else 
+                    FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Mutation sign for challenge is unrecognized.");
+            }
     }
 
     public void mutate() {
@@ -150,6 +164,7 @@ implements Comparable<Challenge> {
         this._isSolved = false;
         this._idledRounds = 0;
         this._isGroupSolved = false;
+        this.mutateReputation(this._reputationScore);
     }
 
     @Override
@@ -195,9 +210,10 @@ implements Comparable<Challenge> {
     public String getCompositeString() {
         double compositeCounter = 0.0;
         for (int i = 0; i < this._difficultyMap.length; ++i) {
-            compositeCounter += (double)this._difficultyMap[i];
+            compositeCounter += this._difficultyMap[i];
         }
-        return String.valueOf(compositeCounter / (double)this._difficultyMap.length);
+        compositeCounter /= this._difficultyMap.length;
+        return String.valueOf(compositeCounter);
     }
 }
 

@@ -16,6 +16,7 @@ public class ProposerAgent {
     private ArrayList<cSkill> _skills = new ArrayList();
     private boolean _lastSolved = false;
     public int _problemsSolvedAmount = 0;
+    public int _reputationScore = 0;
 
     public boolean getLastSolved() {
         return this._lastSolved;
@@ -32,6 +33,7 @@ public class ProposerAgent {
         for (i = 0; i < _difficultyMap.length; ++i) {
             _difficultyMap[i] = 0;
         }
+        
         for (i = 0; i < FactoryHolder._configManager.getNumberValue("MAXIMUM_RANDOM_REQUIREMENTS_SELECTED"); ++i) {
             int _randomAccessSkill = this._random.nextInt(FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size());
             _difficultyMap[i] = this._random.nextInt((FactoryHolder._configManager.getNumberValue("MAXIMUM_RANDOM_EXPERIENCE_PER_REQUIREMENT") -
@@ -48,23 +50,28 @@ public class ProposerAgent {
     public Challenge getChallengeProposed() {
         return this._challengeProposed;
     }
+    
+    public void mutateReputation(int _original)
+    {
+        if (FactoryHolder._configManager.getStringValue("ENABLE_REPUTATION").equals("true"))
+            if (FactoryHolder._configManager.getStringValue("PA_ENABLE_MUTATION").equals("true"))
+            {
+                int _rate = this._random.nextInt(FactoryHolder._configManager.getNumberValue("PA_MUTATION_RATE") + 1);
+                if (FactoryHolder._configManager.getStringValue("PA_MUTATION_SIGN").equals("+/-")) {
 
-    private ArrayList<cSkill> _mutateNegativeSkills() {
-        int _factor = this._random.nextInt(FactoryHolder._configManager.getNumberValue("PA_MUTATION_RATE_VALUE") + 1);
-        ArrayList _mutatedSkills = (ArrayList)this._skills.clone();
-        for (int i = 0; i < this._skills.size(); ++i) {
-            ((cSkill)_mutatedSkills.get(i)).setExperience((this._skills.get(i).getExperience() - _factor) * (this._skills.get(i).getExperience() / 100));
-        }
-        return _mutatedSkills;
-    }
+                    boolean _throw = this._random.nextBoolean();
+                    if (_throw)
+                        this._reputationScore = (_original + _rate) * (_original / 100);
+                    else
+                        this._reputationScore = (_original - _rate) * (_original / 100);
 
-    private ArrayList<cSkill> _mutatePositiveSkills() {
-        int _factor = this._random.nextInt(FactoryHolder._configManager.getNumberValue("PA_MUTATION_RATE_VALUE"));
-        ArrayList _mutatedSkills = (ArrayList)this._skills.clone();
-        for (int i = 0; i < this._skills.size(); ++i) {
-            ((cSkill)_mutatedSkills.get(i)).setExperience((this._skills.get(i).getExperience() + _factor) * (this._skills.get(i).getExperience() / 100));
-        }
-        return _mutatedSkills;
+                } else if (FactoryHolder._configManager.getStringValue("PA_MUTATION_SIGN").equals("-")) {
+                    this._reputationScore = (_original - _rate) * (_original / 100);
+                } else if (FactoryHolder._configManager.getStringValue("PA_MUTATION_SIGN").equals("+")) {
+                    this._reputationScore = (_original + _rate) * (_original / 100);
+                } else 
+                    FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Mutation sign for challenge is unrecognized.");
+            }
     }
 
     private cSkill _mutateSkill(cSkill _oldSkill, String _rateoSign) {
@@ -96,6 +103,7 @@ public class ProposerAgent {
 
     public ProposerAgent(ArrayList<cSkill> _skills) {
         this._skills = (ArrayList)_skills.clone();
+        this._reputationScore = this._random.nextInt(100);
     }
 }
 

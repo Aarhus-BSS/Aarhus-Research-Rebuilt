@@ -42,16 +42,7 @@ public class graphStatsExport
     public static final int _GRAPH_PAGENTS_PER_ROUND = 2;
     public static final int _GRAPH_COMPOSITEXP = 3;
     public static final int _GRAPH_COMPOSITECHALLENGES = 4;
-    
-    private static double _getStdDevianceMinChallenges(ArrayList<cRound> _rounds)
-    {
-        return 0;
-    }
-    
-    private static double _getStdDevianceMaxChallenges(ArrayList<cRound> _rounds)
-    {
-        return 0;
-    }
+   
     
     public static ChartPanel[] renderGraphs(ArrayList<cRound> _rounds, roundStatsHolder _globalStats)
     {
@@ -70,7 +61,14 @@ public class graphStatsExport
             compositeExpSeries.add(i, _rounds.get(i)._stats._avgExpPerRound, _globalStats.g_stdMinDevianceAVG[i], _globalStats.g_stdPlusDevianceAVG[i]);
         
         for (int i = 0; i < _rounds.size(); i++)
-            compositeProblemSeries.add(i, _globalStats.g_avgProblemsPerRound[i], _globalStats.g_stdMinDevianceAVGProblems[i], _globalStats.g_stdPlusDevianceAVGProblems[i]);
+        {
+            double _avg = _rounds.get(i)._stats._avgChallengeCountPerRound;
+            double _std = _rounds.get(i)._stats._stdDevianceChallenges;
+            //compositeProblemSeries.add(i, _globalStats.g_avgProblemsPerRound[i], _globalStats.g_stdMinDevianceAVGProblems[i], _globalStats.g_stdPlusDevianceAVGProblems[i]);
+            compositeProblemSeries.add(i, _rounds.get(i)._stats._avgChallengeCountPerRound,
+                                          _rounds.get(i)._stats._avgChallengeCountPerRound - _rounds.get(i)._stats._stdDevianceChallenges, 
+                                          _rounds.get(i)._stats._avgChallengeCountPerRound + _rounds.get(i)._stats._stdDevianceChallenges);
+        }
         
         for (int i = 0; i < _rounds.size(); i++)
             proposersPerRoundSeries.add(i, _rounds.get(i)._stats._PAgentsCountPerRound);
@@ -81,6 +79,7 @@ public class graphStatsExport
         YIntervalSeriesCollection datasetDP = new YIntervalSeriesCollection();
         datasetDP.addSeries(compositeExpSeries);
         datasetDP.addSeries(compositeProblemSeries);
+        
         
         XYSeriesCollection dataset2 = new XYSeriesCollection();
 	XYSeriesCollection dataset3 = new XYSeriesCollection();
@@ -108,6 +107,7 @@ public class graphStatsExport
         JFreeChart compositeChart = ChartFactory.createXYLineChart(
 				"Average skill/difficulty", "Rounds", "Exp/Difficulty",
 				datasetDP, PlotOrientation.VERTICAL, true, true, false);
+        
 	XYPlot xyplot = (XYPlot)compositeChart.getPlot();
 	xyplot.setDomainPannable(true);
 	xyplot.setRangePannable(false);
@@ -129,12 +129,15 @@ public class graphStatsExport
 	domainAxis2.setRange(1, _rounds.size());
 	domainAxis2.setTickUnit(new NumberTickUnit(5));
         
+        compositeChart.getXYPlot().getRangeAxis().setRange(FactoryHolder._configManager.getNumberValue("MINIMAL_RANGE"), 
+                                                           FactoryHolder._configManager.getNumberValue("MAXIMAL_RANGE"));
+        
         try {
             ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
                                                     + OutputNameFormatter.parseName(FactoryHolder._graphNames[1])), agentsPerRoundChart, 3000, 2000);
 
-            ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
-                                                    + OutputNameFormatter.parseName(FactoryHolder._graphNames[0])), avgProbRoundsChart, 3000, 2000);
+            //ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
+            //                                        + OutputNameFormatter.parseName(FactoryHolder._graphNames[0])), avgProbRoundsChart, 3000, 2000);
 			
             ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
                                                     + OutputNameFormatter.parseName(FactoryHolder._graphNames[3])), compositeChart, 3000, 2000);
@@ -160,13 +163,13 @@ public class graphStatsExport
 	domainAxis1.setRange(1, _rounds.size());
 	domainAxis1.setTickUnit(new NumberTickUnit(5));
         
-        try {
+        //try {
             // save graph as image on desktop
-            ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
-                                                    + OutputNameFormatter.parseName(FactoryHolder._graphNames[2])), avgAgentsRoundsChart, 3000, 1000);
-	} catch (IOException e1) {
-            e1.printStackTrace();
-	}
+            //ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
+            //                                        + OutputNameFormatter.parseName(FactoryHolder._graphNames[2])), avgAgentsRoundsChart, 3000, 1000);
+	//} catch (IOException e1) {
+            //e1.printStackTrace();
+	//}
         
         _outGraphs[_GRAPH_AVG_CHALLENGES_PER_ROUND] = new ChartPanel(avgProbRoundsChart);
         _outGraphs[_GRAPH_COMPOSITEXP] = new ChartPanel(compositeChart);

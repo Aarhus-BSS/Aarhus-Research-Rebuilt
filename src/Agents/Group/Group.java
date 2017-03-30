@@ -120,6 +120,8 @@ public class Group
                 break;
             case MODEL_1B_WR:
                 
+                
+                
                 break;
             default:
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Unrecognized model " + _model.toString());
@@ -172,11 +174,24 @@ public class Group
         {
             double[] _saturationPoints = SigmoidedThrows.getSigmoidMap(this._formedFor.getDifficultyMap(), this.getTotalSkillMap());
             
-            if (SigmoidedThrows.throwOnSigmoid(_saturationPoints))
+            if (SigmoidedThrows.throwOnSigmoid(_saturationPoints)) {
+                this._solvedChallenge = this._formedFor;
                 return true;
+            }
         }
         
         return false;
+    }
+    
+    public void shareReputation()
+    {
+        int _shared = this._formedFor._reputationScore / this._groupMembers.size();
+        
+        for (SolverAgent i: this._groupMembers)
+            if (this._solvedChallenge.isSolved())
+                i._reputationScore += _shared;
+            else
+                i._reputationScore -= _shared;
     }
     
     public boolean hasSolvedLastChallenge()

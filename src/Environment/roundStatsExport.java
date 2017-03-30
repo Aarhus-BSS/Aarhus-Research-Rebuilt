@@ -5,6 +5,7 @@
  */
 package Environment;
 
+import Agents.ProposerAgent;
 import Agents.SolverAgent;
 import Challenge.Challenge;
 import java.util.ArrayList;
@@ -22,6 +23,17 @@ public class roundStatsExport
         if (!_solvers.isEmpty())
             for (SolverAgent i: _solvers)
                 _counter += Double.parseDouble(i.compositeExperience());
+        
+        return _counter;
+    }
+    
+    private static double _pcompositeTotal(ArrayList<ProposerAgent> _proposers)
+    {
+        double _counter = 0;
+        
+        if (!_proposers.isEmpty())
+            for (ProposerAgent i: _proposers)
+                _counter += Double.parseDouble(i.getChallengeProposed().getCompositeString());
         
         return _counter;
     }
@@ -52,21 +64,53 @@ public class roundStatsExport
     
     public static double stdDevianceProblems(cRound _round)
     {
-        double _counter = 0, _sd = 0, _average = 0;
+        /*
+        //INCLUDES DEAD CHALLENGES.
         
-        if (_round.getChallanges().size() > 0)
-        {
-            for (Challenge i: _round.getChallanges())
-                _counter += Double.parseDouble(i.getCompositeString());
+        double _counter = 0, _average = 0, _sd = 0;
         
-            _average = (_counter / _round.getChallanges().size());
-
-            for (Challenge i: _round.getChallanges())
-                _sd += Math.pow(Double.parseDouble(i.getCompositeString()) - _average, 2);
-
-            _sd /= _round.getChallanges().size();
-            _sd = Math.sqrt(_sd);
+        double counter = 0;
+	for (int i = 0; i < _round.getChallanges().size(); i++) 
+            counter = counter + Double.parseDouble(_round.getChallanges().get(i).getCompositeString());
+        
+        for (int i = 0; i < _round.getDeadChallenges().size(); i++) 
+            counter = counter + Double.parseDouble(_round.getDeadChallenges().get(i).getCompositeString());
+        
+        _average = (double)counter / ((double)_round.getChallanges().size() + _round.getDeadChallenges().size());
+                
+        for (int i = 0; i < _round.getChallanges().size(); i++)
+            _sd = _sd + Math.pow(Double.parseDouble(_round.getChallanges().get(i).getCompositeString()) - _average, 2);
+        
+        for (int i = 0; i < _round.getDeadChallenges().size(); i++) 
+            _sd = _sd + Math.pow(Double.parseDouble(_round.getDeadChallenges().get(i).getCompositeString()) - _average, 2);
+        
+        _sd = _sd / ((double)_round.getChallanges().size() + _round.getDeadChallenges().size());
+        _sd = Math.sqrt(_sd);
+        
+        return _sd;
+        
+        */
+        
+        double _counter = 0, _average = 0, _sd = 0;
+        
+        double counter = 0;
+	for (int i = 0; i < _round.getChallanges().size(); i++) 
+            counter = counter + Double.parseDouble(_round.getChallanges().get(i).getCompositeString());
+        
+        _average = (double)counter / (double)_round.getChallanges().size();
+                
+        double _composite = 0;
+        double _sub = 0;
+        double _pow = 0;
+        for (int i = 0; i < _round.getChallanges().size(); i++) {
+            _composite = Double.parseDouble(_round.getChallanges().get(i).getCompositeString());
+            _sub = (_composite - _average);
+            _pow = Math.pow(_sub, 2);
+            _sd += _pow;
         }
+        
+        _sd /= _round.getChallanges().size();
+        _sd = Math.sqrt(_sd);
         
         return _sd;
     }
@@ -147,8 +191,13 @@ public class roundStatsExport
             
             _av = averageRoundProblems(_rounds.get(i));
             _gStatsHolder.g_avgProblemsPerRound[i] = _av;
+            double _deviance = stdDevianceProblems(_rounds.get(i));
+            /*
             _gStatsHolder.g_stdMinDevianceAVGProblems[i] = (_av - (stdDevianceProblems(_rounds.get(i))));
             _gStatsHolder.g_stdPlusDevianceAVGProblems[i] = (_av + (stdDevianceProblems(_rounds.get(i))));
+            */
+            _gStatsHolder.g_stdMinDevianceAVGProblems[i] = (_av - _rounds.get(i)._stats._stdDevianceChallenges);
+            _gStatsHolder.g_stdPlusDevianceAVGProblems[i] = (_av + _rounds.get(i)._stats._stdDevianceChallenges);
         }
     }
 }

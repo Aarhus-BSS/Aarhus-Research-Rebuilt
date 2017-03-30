@@ -19,6 +19,7 @@ implements Comparable<SolverAgent> {
     private int _tryHardedLastChallenge = 0;
     public boolean _isInGroup = false;
     public boolean _solvedLastChallengeAsGroup = false;
+    public int _reputationScore = 0;
 
     public void _setupAgent() 
     {
@@ -36,6 +37,7 @@ implements Comparable<SolverAgent> {
         this._stats._trials = 0;
         this._stats._rejected = 0;
         this._isInGroup = false;
+        this._reputationScore = this._random.nextInt(100);
     }
 
     public void _setupAgent(ArrayList<cSkill> _skills) 
@@ -47,6 +49,7 @@ implements Comparable<SolverAgent> {
         this._stats._rejected = 0;
         this._isInGroup = false;
         this._skills = (ArrayList)_skills.clone();
+        this._reputationScore = this._random.nextInt(100);
     }
 
     public cStatistics getStats() {
@@ -144,13 +147,15 @@ implements Comparable<SolverAgent> {
         cSkill _newSkill = _oldSkill.clone();
         int _outExp = 0;
         int _curExp = _oldSkill.getExperience();
+        int _rate = this._random.nextInt(FactoryHolder._configManager.getNumberValue("SA_MUTATION_RATE_VALUE") + 1);
         if (_rateoSign.equals("+/-")) {
             boolean _sign = this._random.nextBoolean();
-            _outExp = _sign ? _curExp + FactoryHolder._configManager.getNumberValue("SA_MUTATION_RATE_VALUE") * _curExp / 100 : _curExp - FactoryHolder._configManager.getNumberValue("SA_MUTATION_RATE_VALUE") * _curExp / 100;
+       
+            _outExp = _sign ? _curExp + _rate * _curExp / 100 : _curExp - FactoryHolder._configManager.getNumberValue("SA_MUTATION_RATE_VALUE") * _curExp / 100;
         } else if (_rateoSign.equals("+")) {
-            _outExp = _curExp + FactoryHolder._configManager.getNumberValue("SA_MUTATION_RATE_VALUE") * _curExp / 100;
+            _outExp = _curExp + _rate * _curExp / 100;
         } else if (_rateoSign.equals("-")) {
-            _outExp = _curExp - FactoryHolder._configManager.getNumberValue("SA_MUTATION_RATE_VALUE") * _curExp / 100;
+            _outExp = _curExp - _rate * _curExp / 100;
         } else {
             FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Rateo sign is not recognized.");
         }
@@ -182,25 +187,48 @@ implements Comparable<SolverAgent> {
     public ArrayList<cSkill> getSkills() {
         return this._skills;
     }
+    
+    public void mutateReputation(int _original)
+    {
+        if (FactoryHolder._configManager.getStringValue("ENABLE_REPUTATION").equals("true"))
+            if (FactoryHolder._configManager.getStringValue("SA_ENABLE_MUTATION").equals("true"))
+            {
+                int _rate = this._random.nextInt(FactoryHolder._configManager.getNumberValue("SA_MUTATION_RATE") + 1);
+                if (FactoryHolder._configManager.getStringValue("SA_MUTATION_SIGN").equals("+/-")) {
+
+                    boolean _throw = this._random.nextBoolean();
+                    if (_throw)
+                        this._reputationScore = (_original + _rate) * (_original / 100);
+                    else
+                        this._reputationScore = (_original - _rate) * (_original / 100);
+
+                } else if (FactoryHolder._configManager.getStringValue("SA_MUTATION_SIGN").equals("-")) {
+                    this._reputationScore = (_original - _rate) * (_original / 100);
+                } else if (FactoryHolder._configManager.getStringValue("SA_MUTATION_SIGN").equals("+")) {
+                    this._reputationScore = (_original + _rate) * (_original / 100);
+                } else 
+                    FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Mutation sign for challenge is unrecognized.");
+            }
+    }
 
     public SolverAgent clone() {
         ArrayList<cSkill> _newSet = new ArrayList<cSkill>();
         cSkill _newSkillSlot = null;
+        SolverAgent _sa = null;
         ++this._stats._clonedTimes;
-        if (FactoryHolder._configManager.getStringValue("SA_ENABLE_MUTATION_RATE").equals("true")) {
+        if (FactoryHolder._configManager.getStringValue("SA_ENABLE_MUTATION_RATE").equals("true")) 
+        {
             for (int i = 0; i < FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size(); ++i) {
                 _newSkillSlot = this._mutateSkill(this._skills.get(i), FactoryHolder._configManager.getStringValue("SA_MUTATION_RATE_SIGN"));
                 _newSet.add(_newSkillSlot);
             }
-            return new SolverAgent(_newSet);
+            _sa = new SolverAgent(_newSet);
+            _sa.mutateReputation(this._reputationScore);
+            return _sa;
         }
-        return new SolverAgent(this._skills);
-    }
-
-    public void _tick() {
-        for (int i = 0; i < this._skills.size(); ++i) {
-            this._skills.get(i)._tick();
-        }
+        _sa = new SolverAgent(this._skills);
+        _sa.mutateReputation(this._reputationScore);
+        return _sa;
     }
 
     public void _incrementRejected() {
