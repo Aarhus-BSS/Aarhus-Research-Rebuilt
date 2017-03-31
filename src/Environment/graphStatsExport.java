@@ -104,9 +104,12 @@ public class graphStatsExport
 	plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.red);
 	plot.getRendererForDataset(plot.getDataset(1)).setSeriesPaint(0, Color.blue);
         
+        
         JFreeChart compositeChart = ChartFactory.createXYLineChart(
 				"Average skill/difficulty", "Rounds", "Exp/Difficulty",
 				datasetDP, PlotOrientation.VERTICAL, true, true, false);
+        
+        
         
 	XYPlot xyplot = (XYPlot)compositeChart.getPlot();
 	xyplot.setDomainPannable(true);

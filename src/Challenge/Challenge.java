@@ -8,6 +8,7 @@ import Agents.ProposerAgent;
 import Agents.SolverAgent;
 import Common.Configuration.ConfigManager;
 import Common.Logging.ILogManager;
+import Common.Math.SigmoidedThrows;
 import auresearch.FactoryHolder;
 import java.util.ArrayList;
 import java.util.Random;
@@ -176,22 +177,43 @@ implements Comparable<Challenge> {
         double _chance = 1.0;
         double _randomer = 0.0;
         int i = 0;
-        if (i < this._getBound()) 
+        
+        if (FactoryHolder._configManager.getStringValue("ATTEMPT_TYPE").equals("dicethrow"))
         {
-            _randomer = this._random.nextDouble();
-            if (_agent.getSkill(this._skillTypes.get(i).getName()).getExperience() != 0) 
+            if (i < this._getBound()) 
             {
-                if (_agent.getSkill(this._skillTypes.get(i).getName()).getExperience() - this._difficultyMap[i] >= FactoryHolder._configManager.getNumberValue("CH_MINIMAL_DIFFERENCE") && !FactoryHolder._configManager.getStringValue("CH_EASYREJECTOR").equals("true")) {
-                    this._solvers.add(_agent);
-                    _agent.giveReward(this._reward);
-                    this._author.setLastSolved(true);
-                    this._isSolved = true;
-                    return true;
+                _randomer = this._random.nextDouble();
+                if (_agent.getSkill(this._skillTypes.get(i).getName()).getExperience() != 0) 
+                {
+                    if (_agent.getSkill(this._skillTypes.get(i).getName()).getExperience() - this._difficultyMap[i] >= FactoryHolder._configManager.getNumberValue("CH_MINIMAL_DIFFERENCE") && !FactoryHolder._configManager.getStringValue("CH_EASYREJECTOR").equals("true")) {
+                        this._solvers.add(_agent);
+                        _agent.giveReward(this._reward);
+                        this._author.setLastSolved(true);
+                        this._isSolved = true;
+                        return true;
+                    }
+                    return false;
                 }
                 return false;
             }
-            return false;
+        } else if (FactoryHolder._configManager.getStringValue("ATTEMPT_TYPE").equals("sigmoid")) {
+            int[] _agentMap = new int[_agent.getSkills().size()];
+            for (int k = 0; k < _agent.getSkills().size(); k++)
+                _agentMap[k] = _agent.getSkills().get(k).getExperience();
+           
+            double[] _sigMap = SigmoidedThrows.getSigmoidMap(this._difficultyMap, _agentMap);
+            if (SigmoidedThrows.throwOnSigmoid(_sigMap))
+            {
+                this._solvers.add(_agent);
+                _agent.giveReward(this._reward);
+                this._author.setLastSolved(true);
+                this._isSolved = true;
+                return true;
+            }
+        } else {
+            FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Unknown attempt type value for individual agents.");
         }
+        
         return false;
     }
 

@@ -111,6 +111,15 @@ implements Comparable<SolverAgent> {
     public void giveReward(int _amount) {
         this._stats._money += _amount;
     }
+    
+    public int[] getSkillsArray()
+    {
+        int _agentMap[] = new int[this._skills.size()];
+        for (int k = 0; k < this._skills.size(); k++)
+                _agentMap[k] = this._skills.get(k).getExperience();
+        
+        return _agentMap;
+    }
 
     public cSkill getSkill(String _skillName) {
         for (int i = 0; i < this._skills.size(); ++i) {
