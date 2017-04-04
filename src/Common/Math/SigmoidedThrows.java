@@ -22,6 +22,11 @@ public class SigmoidedThrows
         return (1 / (1 + Math.pow(Math.E, (-1 * x))));
     }
     
+    public static double getSigmoidValue(double _skillReq, double _skillAgent)
+    {
+        return (sigmoid((double)(_skillAgent - _skillReq) / 10));
+    }
+    
     public static double[] getSigmoidMap(int[] _chSkillMap, int[] _agentSkillMap)
     {
         double[] _sigMap = null;
