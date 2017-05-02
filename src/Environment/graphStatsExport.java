@@ -166,13 +166,13 @@ public class graphStatsExport
 	domainAxis1.setRange(1, _rounds.size());
 	domainAxis1.setTickUnit(new NumberTickUnit(5));
         
-        //try {
+        try {
             // save graph as image on desktop
-            //ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
-            //                                        + OutputNameFormatter.parseName(FactoryHolder._graphNames[2])), avgAgentsRoundsChart, 3000, 1000);
-	//} catch (IOException e1) {
-            //e1.printStackTrace();
-	//}
+            ChartUtilities.saveChartAsPNG(new File(FactoryHolder._configManager.getStringValue("GRAPH_OUTPUT_FOLDER") + File.separator
+                                                    + OutputNameFormatter.parseName(FactoryHolder._graphNames[2])), avgAgentsRoundsChart, 3000, 1000);
+	} catch (IOException e1) {
+            e1.printStackTrace();
+	}
         
         _outGraphs[_GRAPH_AVG_CHALLENGES_PER_ROUND] = new ChartPanel(avgProbRoundsChart);
         _outGraphs[_GRAPH_COMPOSITEXP] = new ChartPanel(compositeChart);

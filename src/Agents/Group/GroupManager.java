@@ -84,8 +84,11 @@ public class GroupManager
                     if (!this._groups.get(i)._problem.isSolved())
                         if (this._groups.get(i)._group.attemptSolve()) {
                             _solved++;
-                            for (SolverAgent x: this._groups.get(i)._group.getMembers())
+                            for (SolverAgent x: this._groups.get(i)._group.getMembers()) {
                                 _problems.get(_challengeIndex).forceAssignSuccess(x);
+                                
+                            }
+                            
                             _problems.get(_challengeIndex)._isGroupSolved = true;
                         }
 

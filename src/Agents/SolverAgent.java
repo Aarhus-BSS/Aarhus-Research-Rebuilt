@@ -15,7 +15,7 @@ implements Comparable<SolverAgent> {
     private ArrayList<cSkill> _skills = new ArrayList();
     private cStatistics _stats = new cStatistics();
     private Random _random = new Random();
-    private boolean _solvedLastChallenge = false;
+    public boolean _solvedLastChallenge = false;
     private int _tryHardedLastChallenge = 0;
     public boolean _isInGroup = false;
     public boolean _solvedLastChallengeAsGroup = false;
@@ -69,6 +69,7 @@ implements Comparable<SolverAgent> {
 
     public void setTryHarder(int _status) {
         this._tryHardedLastChallenge = _status;
+        this._stats._idledRounds++;
     }
 
     public boolean getHasSolvedLastChallenge() {

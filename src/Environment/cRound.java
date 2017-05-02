@@ -163,12 +163,13 @@ implements IRound {
             ++this._challenge.get((int)i2).getAuthor()._problemsSolvedAmount;
             this._challenge.get(i2).mutate();
         }
-        if (!this._eradicated) {
+        
+        for (i2 = 0; i2 < FactoryHolder._configManager.getNumberValue("PA_EXPONENTIAL_GENERATION_CHANCE"); ++i2)
             this._pGenerationChanceStep();
-        }
-        for (i2 = 0; i2 < FactoryHolder._configManager.getNumberValue("PA_EXPONENTIAL_GENERATION_CHANCE"); ++i2) {
-            this._pGenerationChanceStep();
-        }
+        
+        for (i2 = 0; i2 < FactoryHolder._configManager.getNumberValue("SA_EXPONENTIAL_GENERATION_CHANCE"); ++i2)
+            this._sGenerationChanceStep();
+            
         this.checkRageQuitters();
     }
 
@@ -200,7 +201,7 @@ implements IRound {
             this._deadChallenges.add(this._challenge.get(i));
             this._challenge.remove(i);
         }
-        FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Removed " + _removedAgents + " agets for rage quitting.");
+        FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Removed " + _removedAgents + " agents for rage quitting.");
     }
 
     public void run() {
@@ -234,6 +235,7 @@ implements IRound {
         ArrayList _touchedCh = (ArrayList)this._challenge.clone();
         
         ArrayList<SolverAgent> _idled = new ArrayList();
+        ArrayList<Challenge> _idledCh = new ArrayList();
         
         
         for (int _trials = 0; !this.getUnsolvedChallenges(this._challenge).isEmpty() && !this.getUnsolvedSAgents(this._sAgents).isEmpty() && _trials < FactoryHolder._configManager.getNumberValue("NUMBER_OF_CHANCES_AN_AGENT_HAS_TO_TRY_TO_FIND_A_PROBLEM"); ++_trials) {
@@ -241,7 +243,7 @@ implements IRound {
             int k = 0;
             while (i < this._challenge.size() && k < this._sAgents.size()) {
                 if (this._challenge.get(i).isSolved() && this._sAgents.get(k).getHasSolvedLastChallenge()) {
-                    ++i;
+                    i++;
                     ++k;
                     continue;
                 }
@@ -260,17 +262,18 @@ implements IRound {
                     {
                             this._challenge.get(i).forceAssignSuccess(this._sAgents.get(k));
                             this._sAgents.get(k).setSolvedLastChallenge(true);
+                            this._sAgents.get(k).getStats()._idledRounds = 0;
                     }
                     this._sAgents.get(k).setTryHarder(this._sAgents.get(k).getTryHarded() + 1);
-                    ++i;
+                    i++;
+                    //this._challenge.get(i++)._idledRounds++;
                     ++k;
                     continue;
                 }
-                ++i;
+                i++;
+                //this._challenge.get(i++)._idledRounds++;
                 k++;
             }
-            
-            
         }
         
         for (int l = 0; l < this._sAgents.size(); l++)
@@ -282,17 +285,14 @@ implements IRound {
                 _idled.add(this._sAgents.get(l));
             }
         
-        
-        if (FactoryHolder._configManager.getStringValue("ENABLE_MAX_IDLED_ROUNDS_CHALLENGE").equals("true")) {
-            for (i = 0; i < this._challenge.size(); ++i) {
-                if (((Challenge)_touchedCh.get(i)).equals(this._challenge.get(i))) {
-                    if (((Challenge)_touchedCh.get(i)).isSolved() || this._challenge.get(i).isSolved()) continue;
-                    ++this._challenge.get((int)i)._idledRounds;
-                    continue;
-                }
-                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "We're not comparing the same challenge here...");
+        for (int o = 0; o < this._challenge.size(); o++)
+            if (this._challenge.get(o).isSolved()) {
+                _idledCh.remove(this._challenge.get(o));
+                this._challenge.get(o)._idledRounds = 0;
+            } else {
+                this._challenge.get(o)._idledRounds++;
+                _idledCh.add(this._challenge.get(o));
             }
-        }
         
         if (FactoryHolder._configManager.getStringValue("ENABLE_GROUPS").equals("true"))
             this._groupHandler = new GroupManager(this._sAgents, this._challenge, this._roundIndex);

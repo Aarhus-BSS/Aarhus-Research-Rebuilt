@@ -177,7 +177,13 @@ implements Comparable<Challenge> {
         double _chance = 1.0;
         double _randomer = 0.0;
         int i = 0;
-        
+        if (_agent._solvedLastChallenge || 
+                _agent._solvedLastChallengeAsGroup)
+        {
+            FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, _agent + " not allowed.");
+            
+            return false;
+        }
         if (FactoryHolder._configManager.getStringValue("ATTEMPT_TYPE").equals("dicethrow"))
         {
             if (i < this._getBound()) 
@@ -227,6 +233,8 @@ implements Comparable<Challenge> {
         this._tryHarders.remove(_agent);
         _agent.giveReward(this._reward);
         this._author.setLastSolved(true);
+        _agent._solvedLastChallengeAsGroup = true;
+        _agent._solvedLastChallenge = true;
     }
 
     public String getCompositeString() {

@@ -101,6 +101,7 @@ public class Group
                             if (_agentSkills[_requirementIndex] >= _actualRequirements[_requirementIndex]
                                 && _solvers.get(i)._isInGroup != true
                                 && _solvers.get(i)._solvedLastChallengeAsGroup != true
+                                && _solvers.get(i)._solvedLastChallenge != true
                                 && i != _solvers.size())
                             {
                                 this._countCoveredRequirements(_solvers.get(i));
@@ -245,6 +246,7 @@ public class Group
                     this._solvedChallenge = this._formedFor;
                     return true;
                 }
+                
             } else if (this._model.equals(MODEL_1B_WR)) {
                 double[] _differentialSkill = this._getDifference();
                 double _average = 0, _reqAvg = 0;
@@ -270,6 +272,7 @@ public class Group
             }
         }
         
+        this._formedFor._idledRounds++;
         return false;
     }
     

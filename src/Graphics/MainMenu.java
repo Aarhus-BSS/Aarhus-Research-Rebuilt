@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -643,17 +644,22 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
     }//GEN-LAST:event_roundListMouseClicked
 
     private void File_NewSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_File_NewSessionActionPerformed
-        _rm = new RoundManager(
-                               FactoryHolder._configManager.getNumberValue("MAX_ROUNDS"),
-                               FactoryHolder._configManager.getNumberValue("SOLVER_AGENTS_AMOUNT"),
-                               FactoryHolder._configManager.getNumberValue("PROPOSER_AGENTS_AMOUNT")
-                              );
-        this.jLabel2.setText("Running...");
-        this.jLabel2.setForeground(Color.RED);
-        this.jProgressBar1.setMaximum(FactoryHolder._configManager.getNumberValue("MAX_ROUNDS"));
-        this.jProgressBar1.setValue(0);
-        this.jLabel3.setText("0 Years / " + FactoryHolder._configManager.getNumberValue("MAX_ROUNDS") + " Years");
-        new Thread(this).start();
+        try {
+            FactoryHolder._configManager.reload();
+            _rm = new RoundManager(
+                    FactoryHolder._configManager.getNumberValue("MAX_ROUNDS"),
+                    FactoryHolder._configManager.getNumberValue("SOLVER_AGENTS_AMOUNT"),
+                    FactoryHolder._configManager.getNumberValue("PROPOSER_AGENTS_AMOUNT")
+            );
+            this.jLabel2.setText("Running...");
+            this.jLabel2.setForeground(Color.RED);
+            this.jProgressBar1.setMaximum(FactoryHolder._configManager.getNumberValue("MAX_ROUNDS"));
+            this.jProgressBar1.setValue(0);
+            this.jLabel3.setText("0 Years / " + FactoryHolder._configManager.getNumberValue("MAX_ROUNDS") + " Years");
+            new Thread(this).start();
+        } catch (IOException ex) {
+            FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Couldn't reload configuration: " + ex.getMessage());
+        }
     }//GEN-LAST:event_File_NewSessionActionPerformed
 
     @Override

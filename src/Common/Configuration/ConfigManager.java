@@ -36,6 +36,11 @@ public class ConfigManager
         
     }
     
+    public void reload() throws IOException
+    {
+        this._importConfiguration();
+    }
+    
     private void _importConfiguration() throws IOException
     {
         BufferedReader br = null;
