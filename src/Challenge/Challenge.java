@@ -6,6 +6,8 @@ package Challenge;
 import Agents.Properties.cSkill;
 import Agents.ProposerAgent;
 import Agents.SolverAgent;
+import static Challenge.Challenge.COMPARATOR_SWITCH_TYPE.COMPARATOR_HIGHEST_TO_LOWEST;
+import static Challenge.Challenge.COMPARATOR_SWITCH_TYPE.COMPARATOR_LOWEST_TO_HIGHEST;
 import Common.Configuration.ConfigManager;
 import Common.Logging.ILogManager;
 import Common.Math.SigmoidedThrows;
@@ -13,8 +15,14 @@ import auresearch.FactoryHolder;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Challenge
-implements Comparable<Challenge> {
+public class Challenge implements Comparable<Challenge> 
+{
+    public static enum COMPARATOR_SWITCH_TYPE
+    {
+        COMPARATOR_LOWEST_TO_HIGHEST,
+        COMPARATOR_HIGHEST_TO_LOWEST
+    }
+    
     private ArrayList<cSkill> _skillTypes = new ArrayList();
     private int[] _difficultyMap = null;
     private int _reward = 0;
@@ -28,6 +36,7 @@ implements Comparable<Challenge> {
     public int _idledRounds = 0;
     public boolean _isGroupSolved = false;
     public int _reputationScore = 0;
+    private COMPARATOR_SWITCH_TYPE _comparatorType = COMPARATOR_HIGHEST_TO_LOWEST;
 
     private int _getBound() {
         if (this._difficultyMap.length <= FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size()) {
@@ -93,6 +102,11 @@ implements Comparable<Challenge> {
         this._author = _author;
         this._isGroupSolved = false;
         this._reputationScore = this._random.nextInt(100);
+        
+        if (FactoryHolder._configManager.getStringValue("CH_SORTED_RANK_TYPE").equals("HTL"))
+            this._comparatorType = COMPARATOR_HIGHEST_TO_LOWEST;
+        else if (FactoryHolder._configManager.getStringValue("CH_SORTED_RANK_TYPE").equals("LTH"))
+            this._comparatorType = COMPARATOR_LOWEST_TO_HIGHEST;
     }
 
     private void _mutateNegative(int _index) {
@@ -170,10 +184,19 @@ implements Comparable<Challenge> {
 
     @Override
     public int compareTo(Challenge _challenge) {
-        return this._totalDifficulty - _challenge._totalDifficulty;
+        switch (this._comparatorType)
+        {
+            case COMPARATOR_HIGHEST_TO_LOWEST:
+                return _challenge._totalDifficulty - this._totalDifficulty;
+            case COMPARATOR_LOWEST_TO_HIGHEST:
+                return this._totalDifficulty - _challenge._totalDifficulty;
+        }
+        return -1;
     }
 
-    public boolean attemptSolve(SolverAgent _agent) {
+    public boolean attemptSolve(SolverAgent _agent) 
+    {
+        
         double _chance = 1.0;
         double _randomer = 0.0;
         int i = 0;
@@ -221,6 +244,7 @@ implements Comparable<Challenge> {
         }
         
         return false;
+
     }
 
     public void forceSolver(SolverAgent _agent) {
@@ -235,6 +259,7 @@ implements Comparable<Challenge> {
         this._author.setLastSolved(true);
         _agent._solvedLastChallengeAsGroup = true;
         _agent._solvedLastChallenge = true;
+        this._idledRounds = 0;
     }
 
     public String getCompositeString() {

@@ -3,7 +3,9 @@
  */
 package Environment;
 
+import AdvStructures.MatchMap;
 import Agents.Group.Group;
+import Agents.Group.GroupFormer;
 import Agents.Group.GroupManager;
 import Agents.Properties.cSkill;
 import Agents.Properties.cStatistics;
@@ -21,7 +23,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class cRound
 implements IRound {
@@ -40,6 +45,8 @@ implements IRound {
     private ArrayList<Challenge> _challenge = new ArrayList();
     public roundStatsHolder _stats = new roundStatsHolder();
     private GroupManager _groupHandler = null;
+    // WITH THE NEW MATCHMAP ALGORITHM YOU NEED GROUP FORMER ONLY!
+    private GroupFormer  _groupFormer = null;
 
     public ArrayList<Challenge> getDeadChallenges()
     {
@@ -48,7 +55,7 @@ implements IRound {
     
     private void _pGenerationChanceStep() {
         int _curChance = this._random.nextInt(100);
-        if (_curChance >= FactoryHolder._configManager.getNumberValue("PA_EXPONENTIAL_GENERATION_CHANCE")) {
+        if (_curChance >= FactoryHolder._configManager.getNumberValue("PA_CHANCE_OF_GENERATION")) {
             if (!this._pAgents.isEmpty()) {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "New pagent clone creation:");
                 int _randomPick = this._random.nextInt(this._pAgents.size());
@@ -73,7 +80,8 @@ implements IRound {
 
     private void _sGenerationChanceStep() {
         int _curChance = this._random.nextInt(100);
-        if (_curChance >= FactoryHolder._configManager.getNumberValue("SA_EXPONENTIAL_GENERATION_CHANCE")) {
+        if (_curChance >= FactoryHolder._configManager.getNumberValue("SA_CHANCE_OF_GENERATION")) 
+        {
             if (!this._sAgents.isEmpty()) {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "New sagent clone creation:");
                 int _randomPick = this._random.nextInt(this._sAgents.size());
@@ -171,6 +179,23 @@ implements IRound {
             this._sGenerationChanceStep();
             
         this.checkRageQuitters();
+        this.checkRageQuitters();
+        
+        /*
+        System.out.println("--------------- " + this._roundIndex + " ---------------");
+        for (int i = 0; i < this._deadSAgents.size(); i++)
+        {
+            if (this._deadSAgents.get(i).getStats()._idledRounds >= 6)
+                System.out.println(this._deadSAgents.get(i).getStats()._idledRounds);
+        }
+        
+        System.out.println("--------------- " + this._roundIndex + " ---------------");
+        for (int i = 0; i < this._deadPAgents.size(); i++)
+        {
+            if (this._deadPAgents.get(i).getChallengeProposed()._idledRounds > 5)
+                System.out.println(this._deadPAgents.get(i).getChallengeProposed()._idledRounds);
+        }
+        */
     }
 
     public cRound(cSkill _type, int _round) {
@@ -182,7 +207,8 @@ implements IRound {
         return this._groupPool;
     }
 
-    private void checkRageQuitters() {
+    private void checkRageQuitters() 
+    {
         int i;
         int _removedAgents = 0;
         for (i = 0; i < this._sAgents.size(); ++i) {
@@ -203,22 +229,31 @@ implements IRound {
         }
         FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Removed " + _removedAgents + " agents for rage quitting.");
     }
+    
+    MatchMap _map = new MatchMap();
 
     public void run() {
         if (!this._eradicated) {
-            for (int i = 1; i < FactoryHolder._configManager.getNumberValue("SA_EXPONENTIAL_GENERATION_CHANCE"); ++i) {
-                this._sGenerationChanceStep();
-            }
+            //for (int i = 1; i < FactoryHolder._configManager.getNumberValue("SA_EXPONENTIAL_GENERATION_CHANCE"); ++i) {
+            //    this._sGenerationChanceStep();
+            //}
             if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("sorted")) {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Sorting pools...");
-                Collections.sort(this._challenge);
-                Collections.sort(this._sAgents);
+                //Collections.sort(this._challenge);
+                //Collections.sort(this._sAgents);
+                
+                _map.Initialize(_challenge, _sAgents, MatchMap._MATCH_TYPE.TYPE_SORTED);
+                
                 this._match();
+                
                
             } else if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("random")) {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Randomizing pools...");
-                Collections.shuffle(this._challenge);
-                Collections.shuffle(this._sAgents);
+                //Collections.shuffle(this._challenge);
+                //Collections.shuffle(this._sAgents);
+                
+                _map.Initialize(_challenge, _sAgents, MatchMap._MATCH_TYPE.TYPE_RANDOM);
+                
                 this._match();
                 
             } else if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("skill_based")) {
@@ -237,7 +272,7 @@ implements IRound {
         ArrayList<SolverAgent> _idled = new ArrayList();
         ArrayList<Challenge> _idledCh = new ArrayList();
         
-        
+        /*
         for (int _trials = 0; !this.getUnsolvedChallenges(this._challenge).isEmpty() && !this.getUnsolvedSAgents(this._sAgents).isEmpty() && _trials < FactoryHolder._configManager.getNumberValue("NUMBER_OF_CHANCES_AN_AGENT_HAS_TO_TRY_TO_FIND_A_PROBLEM"); ++_trials) {
             i = 0;
             int k = 0;
@@ -255,24 +290,27 @@ implements IRound {
                     ++i;
                     continue;
                 }
-                if (this._challenge.get(i).isSolved() || this._sAgents.get(k).getHasSolvedLastChallenge()) continue;
-                if (_canProceedWithChallenge(this._sAgents.get(k), this._challenge.get(i))) 
-                {
-                    if (this._challenge.get(i).attemptSolve(this._sAgents.get(k))) 
+                if (!this._challenge.get(i).isSolved() && !this._sAgents.get(k).getHasSolvedLastChallenge()) {
+                    if (_canProceedWithChallenge(this._sAgents.get(k), this._challenge.get(i))) 
                     {
-                            this._challenge.get(i).forceAssignSuccess(this._sAgents.get(k));
-                            this._sAgents.get(k).setSolvedLastChallenge(true);
-                            this._sAgents.get(k).getStats()._idledRounds = 0;
+                        if (this._challenge.get(i).attemptSolve(this._sAgents.get(k))) 
+                        {
+                                this._challenge.get(i)._idledRounds = 0;
+                                this._challenge.get(i).forceAssignSuccess(this._sAgents.get(k));
+                                this._sAgents.get(k).setSolvedLastChallenge(true);
+                                this._sAgents.get(k).getStats()._idledRounds = 0;
+                        }
+                        this._sAgents.get(k).setTryHarder(this._sAgents.get(k).getTryHarded() + 1);
+                        //this._sAgents.get(k).getStats()._idledRounds++;
+                        //this._challenge.get(i)._idledRounds++;
+                        
+                        i++;
+                        ++k;
+                        continue;
+                    } else {
+                        k++;
                     }
-                    this._sAgents.get(k).setTryHarder(this._sAgents.get(k).getTryHarded() + 1);
-                    i++;
-                    //this._challenge.get(i++)._idledRounds++;
-                    ++k;
-                    continue;
                 }
-                i++;
-                //this._challenge.get(i++)._idledRounds++;
-                k++;
             }
         }
         
@@ -293,18 +331,49 @@ implements IRound {
                 this._challenge.get(o)._idledRounds++;
                 _idledCh.add(this._challenge.get(o));
             }
+        */
         
-        if (FactoryHolder._configManager.getStringValue("ENABLE_GROUPS").equals("true"))
-            this._groupHandler = new GroupManager(this._sAgents, this._challenge, this._roundIndex);
+        _map.ProcessMatch();
+        
+        this.checkRageQuitters();
+        
+        if (FactoryHolder._configManager.getStringValue("ENABLE_GROUPS").equals("true")) 
+        {
+            this._groupFormer = new GroupFormer(this._challenge, this._sAgents);
+            //this._groupHandler = new GroupManager(this._sAgents, this._challenge, this._roundIndex);
+            
+            if (this._groupFormer.isReady())
+            {
+                if (this._groupFormer.processMatch())
+                {
+                    // GG.
+                } else {
+                    FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "No Groups solved at least a challenge, shame!");
+                }
+            } else
+                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Group Former not ready, there was a problem!");
+            
+        }
+        
+        this.checkRageQuitters();
 
     }
 
     public static boolean _canProceedWithChallenge(SolverAgent _agent, Challenge _skillMap) {
-        for (int k = 0; k < FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size(); ++k) {
-            if (_agent.getSkills().get(k).getExperience() > _skillMap.getDifficultyMap()[k]) continue;
+        for (int k = 0; k < FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size(); ++k) 
+        {
+            if (_agent.getSkills().get(k).getExperience() > _skillMap.getDifficultyMap()[k]) 
+                continue;
             return false;
         }
-        return _agent.getTryHarded() <= FactoryHolder._configManager.getNumberValue("NUMBER_OF_TRIALS_FOR_SINGLE_AGENT_SOLVING");
+        if (_agent.getStats()._idledRounds >= FactoryHolder._configManager.getNumberValue("SA_MAX_IDLED_ROUNDS"))
+            return false;
+        // REINFORCING RULE!
+        if (_agent.getStats()._idledRounds <= FactoryHolder._configManager.getNumberValue("SA_MAX_IDLED_ROUNDS") &&
+                _agent.getStats()._idledRounds >= 0)
+            return true;
+        
+        return false;
     }
 
     @Override

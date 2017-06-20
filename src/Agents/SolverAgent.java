@@ -5,13 +5,21 @@ package Agents;
 
 import Agents.Properties.cSkill;
 import Agents.Properties.cStatistics;
+import static Agents.SolverAgent.COMPARATOR_SWITCH_TYPE.COMPARATOR_HIGHEST_TO_LOWEST;
+import static Agents.SolverAgent.COMPARATOR_SWITCH_TYPE.COMPARATOR_LOWEST_TO_HIGHEST;
 import Common.Logging.ILogManager;
 import auresearch.FactoryHolder;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class SolverAgent
-implements Comparable<SolverAgent> {
+public class SolverAgent implements Comparable<SolverAgent> 
+{
+    public static enum COMPARATOR_SWITCH_TYPE
+    {
+        COMPARATOR_LOWEST_TO_HIGHEST,
+        COMPARATOR_HIGHEST_TO_LOWEST
+    }
+    
     private ArrayList<cSkill> _skills = new ArrayList();
     private cStatistics _stats = new cStatistics();
     private Random _random = new Random();
@@ -20,6 +28,7 @@ implements Comparable<SolverAgent> {
     public boolean _isInGroup = false;
     public boolean _solvedLastChallengeAsGroup = false;
     public int _reputationScore = 0;
+    public COMPARATOR_SWITCH_TYPE _comparatorType = COMPARATOR_HIGHEST_TO_LOWEST;
 
     public void _setupAgent() 
     {
@@ -38,6 +47,12 @@ implements Comparable<SolverAgent> {
         this._stats._rejected = 0;
         this._isInGroup = false;
         this._reputationScore = this._random.nextInt(100);
+        
+        if (FactoryHolder._configManager.getStringValue("SA_SORTED_RANK_TYPE").equals("HTL"))
+            this._comparatorType = COMPARATOR_HIGHEST_TO_LOWEST;
+        else if (FactoryHolder._configManager.getStringValue("SA_SORTED_RANK_TYPE").equals("LTH"))
+            this._comparatorType = COMPARATOR_LOWEST_TO_HIGHEST;
+        
     }
 
     public void _setupAgent(ArrayList<cSkill> _skills) 
@@ -50,6 +65,12 @@ implements Comparable<SolverAgent> {
         this._isInGroup = false;
         this._skills = (ArrayList)_skills.clone();
         this._reputationScore = this._random.nextInt(100);
+        
+        
+        if (FactoryHolder._configManager.getStringValue("SA_SORTED_RANK_TYPE").equals("HTL"))
+            this._comparatorType = COMPARATOR_HIGHEST_TO_LOWEST;
+        else if (FactoryHolder._configManager.getStringValue("SA_SORTED_RANK_TYPE").equals("LTH"))
+            this._comparatorType = COMPARATOR_LOWEST_TO_HIGHEST;
     }
 
     public cStatistics getStats() {
@@ -65,6 +86,7 @@ implements Comparable<SolverAgent> {
 
     public void setSolvedLastChallenge(boolean _status) {
         this._solvedLastChallenge = _status;
+        this._stats._idledRounds = 0;
     }
 
     public void setTryHarder(int _status) {
@@ -88,9 +110,22 @@ implements Comparable<SolverAgent> {
         this._setupAgent(_skills);
     }
 
+    public void setComparatorSwitch(COMPARATOR_SWITCH_TYPE _type)
+    {
+        this._comparatorType = _type;
+    }
+    
     @Override
-    public int compareTo(SolverAgent _agent) {
-        return _agent.getTotalExperience() - this.getTotalExperience();
+    public int compareTo(SolverAgent _agent) 
+    {
+        switch (this._comparatorType)
+        {
+            case COMPARATOR_LOWEST_TO_HIGHEST:
+                return this.getTotalExperience() - _agent.getTotalExperience() ;
+            case COMPARATOR_HIGHEST_TO_LOWEST:
+                return _agent.getTotalExperience() - this.getTotalExperience();
+        }
+        return -1;
     }
 
     public void addExpToSkill(String _skillName, int _experienceAmount) {

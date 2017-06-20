@@ -8,7 +8,6 @@ package auresearch;
 import Common.Configuration.ConfigManager;
 import Common.Logging.ILogManager;
 import Common.Logging.cLogConsole;
-import Graphics.CEditor;
 import java.io.IOException;
 
 /**
@@ -31,6 +30,7 @@ public class AUResearch
                 {
                     public void run() 
                     {
+                        /*
                         CEditor dialog = new CEditor();
                         dialog.setLocationRelativeTo(null);
 
@@ -43,6 +43,7 @@ public class AUResearch
                             }
                         });
                         dialog.setVisible(true);
+                        */
                         //new CEditor().setVisible(true);
                     }
                 });
@@ -53,9 +54,7 @@ public class AUResearch
             if (FactoryHolder._configManager.hasError())
                 return;
 
-            //Mint.initAndStartSession(null, FactoryHolder._configManager.getStringValue("MINT_APIKEY"));
-            // Import the grade table.
-            //GradeTableConverter.setTable(FactoryHolder._configManager.getArrayValue("GRADE_TABLE"));
+            FactoryHolder._logManager.setDebugMode(false);
 
             // Override simulator initialization and function to the ModeSwitcher.
             ModeSwitcher.start(FactoryHolder._configManager.getStringValue("MODE"));

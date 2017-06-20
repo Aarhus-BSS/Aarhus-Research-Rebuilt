@@ -43,7 +43,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
     
     public void clearEverything()
     {
-        this.roundList.removeAll();
+        //this.roundList.removeAll();
     }
     
     public MainMenu(java.awt.Frame parent, boolean modal) {
@@ -52,11 +52,11 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         this.setAlwaysOnTop(false);
         this.setAutoRequestFocus(false);
         
-        this._tListener = new TreeListener(this.roundList);
+        //this._tListener = new TreeListener(this.roundList);
         
-        this.roundList.setEditable(true);
-        this.roundList.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        this.roundList.setShowsRootHandles(true);
+        //this.roundList.setEditable(true);
+        //this.roundList.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        //this.roundList.setShowsRootHandles(true);
     }
 
     /**
@@ -68,22 +68,13 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        Sep1 = new javax.swing.JSeparator();
         GraphTab = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        Graph_ActivityMonitor = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         Graph_ActivityMonitor5 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        Graph_ActivityMonitor6 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         Graph_ActivityMonitor7 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         Graph_ActivityMonitor8 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        roundList = new javax.swing.JTree();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -110,48 +101,8 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         setName("DialogMain"); // NOI18N
         setResizable(false);
 
-        Sep1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
         GraphTab.setToolTipText("");
         GraphTab.setName(""); // NOI18N
-
-        Graph_ActivityMonitor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        Graph_ActivityMonitor.setMaximumSize(new java.awt.Dimension(60, 283));
-        Graph_ActivityMonitor.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Graph_ActivityMonitorMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout Graph_ActivityMonitorLayout = new javax.swing.GroupLayout(Graph_ActivityMonitor);
-        Graph_ActivityMonitor.setLayout(Graph_ActivityMonitorLayout);
-        Graph_ActivityMonitorLayout.setHorizontalGroup(
-            Graph_ActivityMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 674, Short.MAX_VALUE)
-        );
-        Graph_ActivityMonitorLayout.setVerticalGroup(
-            Graph_ActivityMonitorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 429, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Graph_ActivityMonitor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Graph_ActivityMonitor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        GraphTab.addTab("AVG Problem Solve pR", jPanel1);
 
         Graph_ActivityMonitor5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Graph_ActivityMonitor5.setMaximumSize(new java.awt.Dimension(60, 283));
@@ -165,7 +116,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         Graph_ActivityMonitor5.setLayout(Graph_ActivityMonitor5Layout);
         Graph_ActivityMonitor5Layout.setHorizontalGroup(
             Graph_ActivityMonitor5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 674, Short.MAX_VALUE)
+            .addGap(0, 949, Short.MAX_VALUE)
         );
         Graph_ActivityMonitor5Layout.setVerticalGroup(
             Graph_ActivityMonitor5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,44 +142,6 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
 
         GraphTab.addTab("Agents pR", jPanel2);
 
-        Graph_ActivityMonitor6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        Graph_ActivityMonitor6.setMaximumSize(new java.awt.Dimension(60, 283));
-        Graph_ActivityMonitor6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Graph_ActivityMonitor6MouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout Graph_ActivityMonitor6Layout = new javax.swing.GroupLayout(Graph_ActivityMonitor6);
-        Graph_ActivityMonitor6.setLayout(Graph_ActivityMonitor6Layout);
-        Graph_ActivityMonitor6Layout.setHorizontalGroup(
-            Graph_ActivityMonitor6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 674, Short.MAX_VALUE)
-        );
-        Graph_ActivityMonitor6Layout.setVerticalGroup(
-            Graph_ActivityMonitor6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 429, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Graph_ActivityMonitor6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Graph_ActivityMonitor6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        GraphTab.addTab("PAgents pR", jPanel3);
-
         Graph_ActivityMonitor7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Graph_ActivityMonitor7.setMaximumSize(new java.awt.Dimension(60, 283));
         Graph_ActivityMonitor7.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -241,7 +154,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         Graph_ActivityMonitor7.setLayout(Graph_ActivityMonitor7Layout);
         Graph_ActivityMonitor7Layout.setHorizontalGroup(
             Graph_ActivityMonitor7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 674, Short.MAX_VALUE)
+            .addGap(0, 949, Short.MAX_VALUE)
         );
         Graph_ActivityMonitor7Layout.setVerticalGroup(
             Graph_ActivityMonitor7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,7 +192,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         Graph_ActivityMonitor8.setLayout(Graph_ActivityMonitor8Layout);
         Graph_ActivityMonitor8Layout.setHorizontalGroup(
             Graph_ActivityMonitor8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 674, Short.MAX_VALUE)
+            .addGap(0, 949, Short.MAX_VALUE)
         );
         Graph_ActivityMonitor8Layout.setVerticalGroup(
             Graph_ActivityMonitor8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,51 +217,6 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         );
 
         GraphTab.addTab("Composite Problems", jPanel5);
-
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Rounds");
-        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Round 1");
-        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("PAgents");
-        javax.swing.tree.DefaultMutableTreeNode treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("PAgent#1");
-        treeNode3.add(treeNode4);
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("SAgents");
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("SAgent#1");
-        treeNode3.add(treeNode4);
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("SAgent#2");
-        treeNode3.add(treeNode4);
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("SAgent#3");
-        treeNode3.add(treeNode4);
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
-        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Round 2");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("PAgents");
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("PAgent#1");
-        treeNode3.add(treeNode4);
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("PAgent#2");
-        treeNode3.add(treeNode4);
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("SAgents");
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("SAgent#1");
-        treeNode3.add(treeNode4);
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("SAgent#2");
-        treeNode3.add(treeNode4);
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("SAgent#3");
-        treeNode3.add(treeNode4);
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
-        roundList.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        roundList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                roundListMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(roundList);
-
-        jCheckBox1.setSelected(true);
-        jCheckBox1.setText("Use same agents every Round");
-
-        jCheckBox2.setSelected(true);
-        jCheckBox2.setText("Enable mortality");
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -414,6 +282,11 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         Menu_Options.setText("Options");
 
         Options_Graphics.setText("Graphics");
+        Options_Graphics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Options_GraphicsActionPerformed(evt);
+            }
+        });
         Menu_Options.add(Options_Graphics);
 
         jMenu.add(Menu_Options);
@@ -426,19 +299,9 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(Sep1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(GraphTab)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jCheckBox2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -452,39 +315,29 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
                                 .addGap(27, 27, 27))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel3)
-                                .addGap(47, 47, 47))))))
+                                .addGap(47, 47, 47))))
+                    .addComponent(GraphTab)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Sep1)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(GraphTab, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(GraphTab, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jCheckBox1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jCheckBox2))
-                                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))))
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         GraphTab.getAccessibleContext().setAccessibleName("AVG Problem Solve pR");
@@ -498,43 +351,8 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         System.exit(0);
     }//GEN-LAST:event_Menu_QuitActionPerformed
 
-    private void Graph_ActivityMonitorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Graph_ActivityMonitorMouseClicked
-        
-        this.Graph_ActivityMonitor.removeAll();
-        this.Graph_ActivityMonitor.setLayout(new FlowLayout(FlowLayout.LEFT));
-        /*
-        FactoryHolder._graphicManager.setGraphProperties(GraphTypeHandler._GRAPH_TYPE.TYPE_XYLINE, GraphTypeHandler._GRAPH_ORIENTATION.ORIENT_VERTICAL);
-        FactoryHolder._graphicManager.setName("AVG Problems per Round");
-        FactoryHolder._graphicManager.setSeriesName("Test Series");
-        
-        FactoryHolder._graphicManager.addXYData(1, 1);
-        FactoryHolder._graphicManager.addXYData(2, 2);
-        FactoryHolder._graphicManager.addXYData(3, 3);
-        FactoryHolder._graphicManager.addXYData(4, 4);
-        FactoryHolder._graphicManager.addXYData(5, 5);
-        FactoryHolder._graphicManager.addXYData(6, 6);
-        
-        FactoryHolder._graphicManager.assignData();
-        */
-        ChartPanel _chart = null;
-        
-        if (FactoryHolder._graphsRender != null)
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND];
-        else {
-            MBox.showBox("Renders not available.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-            return;
-        }
-        //new ChartPanel(FactoryHolder._graphicManager.render()); 
-        if (_chart != null)
-        {
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND];
-            this.Graph_ActivityMonitor.add(_chart);
-            this.Graph_ActivityMonitor.validate();
-        } else 
-            MBox.showBox("Graphic has not been rendered yet.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-    }//GEN-LAST:event_Graph_ActivityMonitorMouseClicked
-
     private void ExportMenu_XLSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportMenu_XLSActionPerformed
+        /*
         ReportCompiler _report = new ReportCompiler("testReport");
         
         _report.createReport(new Object[] {"ID", "Agent Type", "Experience"});
@@ -548,100 +366,10 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         _report.addContent(new Object[] {"8", "SolverAgent#8", 2300});
         _report.addContent(new Object[] {"9", "SolverAgent#9", 11100});
         _report.end();
+        
         MBox.showBox("Report has been compiled into " + FactoryHolder._configManager.getStringValue("REPORT_OUTPUT_FOLDER") + File.separator + "testReport.xls", "Report compiled", MBox._MSGBOX_TYPE.TYPE_INFORMATION);
+        */
     }//GEN-LAST:event_ExportMenu_XLSActionPerformed
-
-    private void Graph_ActivityMonitor5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Graph_ActivityMonitor5MouseClicked
-         this.Graph_ActivityMonitor5.removeAll();
-        this.Graph_ActivityMonitor5.setLayout(new FlowLayout(FlowLayout.LEFT));
-        
-         ChartPanel _chart = null;
-        
-        if (FactoryHolder._graphsRender != null)
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_SAGENTS_PER_ROUND];
-        else {
-            MBox.showBox("Renders not available.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-            return;
-        }
-        //new ChartPanel(FactoryHolder._graphicManager.render()); 
-        if (_chart != null)
-        {
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_SAGENTS_PER_ROUND];
-            this.Graph_ActivityMonitor5.add(_chart);
-            this.Graph_ActivityMonitor5.validate();
-        } else 
-            MBox.showBox("Graphic has not been rendered yet.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-    }//GEN-LAST:event_Graph_ActivityMonitor5MouseClicked
-
-    private void Graph_ActivityMonitor6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Graph_ActivityMonitor6MouseClicked
-         this.Graph_ActivityMonitor6.removeAll();
-        this.Graph_ActivityMonitor6.setLayout(new FlowLayout(FlowLayout.LEFT));
-        
-         ChartPanel _chart = null;
-        
-        if (FactoryHolder._graphsRender != null)
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND];
-        else {
-            MBox.showBox("Renders not available.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-            return;
-        }
-        //new ChartPanel(FactoryHolder._graphicManager.render()); 
-        if (_chart != null)
-        {
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND];
-            this.Graph_ActivityMonitor6.add(_chart);
-            this.Graph_ActivityMonitor6.validate();
-        } else 
-            MBox.showBox("Graphic has not been rendered yet.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-    }//GEN-LAST:event_Graph_ActivityMonitor6MouseClicked
-
-    private void Graph_ActivityMonitor7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Graph_ActivityMonitor7MouseClicked
-        this.Graph_ActivityMonitor7.removeAll();
-        this.Graph_ActivityMonitor7.setLayout(new FlowLayout(FlowLayout.LEFT));
-        
-         ChartPanel _chart = null;
-        
-        if (FactoryHolder._graphsRender != null)
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_COMPOSITEXP];
-        else {
-            MBox.showBox("Renders not available.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-            return;
-        }
-        //new ChartPanel(FactoryHolder._graphicManager.render()); 
-        if (_chart != null)
-        {
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_COMPOSITEXP];
-            this.Graph_ActivityMonitor7.add(_chart);
-            this.Graph_ActivityMonitor7.validate();
-        } else 
-            MBox.showBox("Graphic has not been rendered yet.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-    }//GEN-LAST:event_Graph_ActivityMonitor7MouseClicked
-
-    private void Graph_ActivityMonitor8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Graph_ActivityMonitor8MouseClicked
-        this.Graph_ActivityMonitor8.removeAll();
-        this.Graph_ActivityMonitor8.setLayout(new FlowLayout(FlowLayout.LEFT));
-        
-         ChartPanel _chart = null;
-        
-        if (FactoryHolder._graphsRender != null)
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND];
-        else {
-            MBox.showBox("Renders not available.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-            return;
-        }
-        //new ChartPanel(FactoryHolder._graphicManager.render()); 
-        if (_chart != null)
-        {
-            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND];
-            this.Graph_ActivityMonitor8.add(_chart);
-            this.Graph_ActivityMonitor8.validate();
-        } else 
-            MBox.showBox("Graphic has not been rendered yet.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
-    }//GEN-LAST:event_Graph_ActivityMonitor8MouseClicked
-
-    private void roundListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_roundListMouseClicked
-        this._tListener.mouseClicked(evt);
-    }//GEN-LAST:event_roundListMouseClicked
 
     private void File_NewSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_File_NewSessionActionPerformed
         try {
@@ -656,11 +384,88 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
             this.jProgressBar1.setMaximum(FactoryHolder._configManager.getNumberValue("MAX_ROUNDS"));
             this.jProgressBar1.setValue(0);
             this.jLabel3.setText("0 Years / " + FactoryHolder._configManager.getNumberValue("MAX_ROUNDS") + " Years");
+            
             new Thread(this).start();
         } catch (IOException ex) {
             FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Couldn't reload configuration: " + ex.getMessage());
         }
     }//GEN-LAST:event_File_NewSessionActionPerformed
+
+    private void Graph_ActivityMonitor8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Graph_ActivityMonitor8MouseClicked
+        this.Graph_ActivityMonitor8.removeAll();
+        this.Graph_ActivityMonitor8.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        ChartPanel _chart = null;
+
+        if (FactoryHolder._graphsRender != null)
+        _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND];
+        else {
+            MBox.showBox("Renders not available.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
+            return;
+        }
+        //new ChartPanel(FactoryHolder._graphicManager.render());
+        if (_chart != null)
+        {
+            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND];
+            this.Graph_ActivityMonitor8.add(_chart);
+            this.Graph_ActivityMonitor8.validate();
+        } else
+        MBox.showBox("Graphic has not been rendered yet.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
+    }//GEN-LAST:event_Graph_ActivityMonitor8MouseClicked
+
+    private void Graph_ActivityMonitor7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Graph_ActivityMonitor7MouseClicked
+        this.Graph_ActivityMonitor7.removeAll();
+        this.Graph_ActivityMonitor7.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        ChartPanel _chart = null;
+
+        if (FactoryHolder._graphsRender != null)
+        _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_COMPOSITEXP];
+        else {
+            MBox.showBox("Renders not available, wait simulation completition.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
+            return;
+        }
+        //new ChartPanel(FactoryHolder._graphicManager.render());
+        if (_chart != null)
+        {
+            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_COMPOSITEXP];
+            this.Graph_ActivityMonitor7.add(_chart);
+            this.Graph_ActivityMonitor7.validate();
+        } else
+        MBox.showBox("Renders not available, wait simulation completition.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
+    }//GEN-LAST:event_Graph_ActivityMonitor7MouseClicked
+
+    private void Graph_ActivityMonitor5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Graph_ActivityMonitor5MouseClicked
+        this.Graph_ActivityMonitor5.removeAll();
+        this.Graph_ActivityMonitor5.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        ChartPanel _chart = null;
+
+        if (FactoryHolder._graphsRender != null)
+        _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_SAGENTS_PER_ROUND];
+        else {
+            MBox.showBox("Renders not available, wait simulation completition.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
+            return;
+        }
+        //new ChartPanel(FactoryHolder._graphicManager.render());
+        if (_chart != null)
+        {
+            _chart = FactoryHolder._graphsRender[graphStatsExport._GRAPH_SAGENTS_PER_ROUND];
+            this.Graph_ActivityMonitor5.add(_chart);
+            this.Graph_ActivityMonitor5.validate();
+        } else
+        MBox.showBox("Renders not available, wait simulation completition.", "Error", MBox._MSGBOX_TYPE.TYPE_ERROR);
+    }//GEN-LAST:event_Graph_ActivityMonitor5MouseClicked
+
+    private void Options_GraphicsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Options_GraphicsActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                CEditor ce = new CEditor();
+                ce.setFocusable(true);
+                ce.setVisible(true);
+            }
+        });
+    }//GEN-LAST:event_Options_GraphicsActionPerformed
 
     @Override
     public void run()
@@ -687,8 +492,8 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         {
         
             //new ChartPanel(FactoryHolder._graphicManager.render()); 
-            this.Graph_ActivityMonitor.removeAll();
-            this.Graph_ActivityMonitor.setLayout(new FlowLayout(FlowLayout.LEFT));
+            //this.Graph_ActivityMonitor.removeAll();
+            //this.Graph_ActivityMonitor.setLayout(new FlowLayout(FlowLayout.LEFT));
             this.Graph_ActivityMonitor5.removeAll();
             this.Graph_ActivityMonitor5.setLayout(new FlowLayout(FlowLayout.LEFT));
             this.Graph_ActivityMonitor7.removeAll();
@@ -696,7 +501,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
             this.Graph_ActivityMonitor8.removeAll();
             this.Graph_ActivityMonitor8.setLayout(new FlowLayout(FlowLayout.LEFT));
             
-            this.Graph_ActivityMonitor.add(FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND]);
+            //this.Graph_ActivityMonitor.add(FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND]);
             this.Graph_ActivityMonitor5.add(FactoryHolder._graphsRender[graphStatsExport._GRAPH_SAGENTS_PER_ROUND]);
             this.Graph_ActivityMonitor7.add(FactoryHolder._graphsRender[graphStatsExport._GRAPH_COMPOSITEXP]);
             this.Graph_ActivityMonitor8.add(FactoryHolder._graphsRender[graphStatsExport._GRAPH_PAGENTS_PER_ROUND]);
@@ -707,7 +512,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
                 Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            this.Graph_ActivityMonitor.validate();
+            //this.Graph_ActivityMonitor.validate();
             this.Graph_ActivityMonitor5.validate();
             this.Graph_ActivityMonitor7.validate();
             this.Graph_ActivityMonitor8.validate();
@@ -722,9 +527,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
     private javax.swing.JMenuItem File_CloseSession;
     private javax.swing.JMenuItem File_NewSession;
     private javax.swing.JTabbedPane GraphTab;
-    private javax.swing.JPanel Graph_ActivityMonitor;
     private javax.swing.JPanel Graph_ActivityMonitor5;
-    private javax.swing.JPanel Graph_ActivityMonitor6;
     private javax.swing.JPanel Graph_ActivityMonitor7;
     private javax.swing.JPanel Graph_ActivityMonitor8;
     private javax.swing.JMenu Menu_ExportMenu;
@@ -734,21 +537,14 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
     private javax.swing.JPopupMenu.Separator Menu_Sep1;
     private javax.swing.JPopupMenu.Separator Menu_Sep2;
     private javax.swing.JMenuItem Options_Graphics;
-    private javax.swing.JSeparator Sep1;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenu;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JProgressBar jProgressBar1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTree roundList;
     // End of variables declaration//GEN-END:variables
 }

@@ -81,19 +81,40 @@ public class GroupManager
                 }
 
                 for (int i = 0; i < this._groups.size(); i++)
-                    if (!this._groups.get(i)._problem.isSolved())
+                    if (!this._groups.get(i)._problem.isSolved()) {
                         if (this._groups.get(i)._group.attemptSolve()) {
                             _solved++;
                             for (SolverAgent x: this._groups.get(i)._group.getMembers()) {
                                 _problems.get(_challengeIndex).forceAssignSuccess(x);
-                                
+                                x.getStats()._idledRounds = 0;
+                                _problems.get(_challengeIndex)._idledRounds = 0;
                             }
                             
                             _problems.get(_challengeIndex)._isGroupSolved = true;
+                        } else {
+                            //_problems.get(_challengeIndex)._idledRounds++;
                         }
-
+                    } else {
+                        //for (SolverAgent a: this._groups.get(i)._group.getMembers())
+                        //    a.getStats()._idledRounds++;
+                    }
                 for (int i = 0; i < this._groups.size(); i++)
                     this._groups.get(i)._group.disband();
+                
+                /*
+                for (int i = 0; i < this._groups.size(); i++)
+                {
+                    if (!this._groups.get(i)._group.hasSolvedLastChallenge())
+                        for (SolverAgent a: this._groups.get(i)._group.getMembers())
+                            a.getStats()._idledRounds++;
+                }
+                
+                for (int i = 0; i < this._groups.size(); i++)
+                {
+                    if (!_problems.get(i)._isGroupSolved)
+                        _problems.get(i)._idledRounds++;
+                }
+                */
             }
         }
         

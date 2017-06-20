@@ -21,7 +21,7 @@ import java.util.Random;
  *
  * @author d3vil401
  */
-public class Group 
+public class Group implements Comparable<Group> 
 {
     private ArrayList<SolverAgent> _groupMembers = new ArrayList<>();
     private Random _random = new Random();
@@ -43,6 +43,8 @@ public class Group
         for (SolverAgent i: _solvers)
             this._groupMembers.add(i);
     }
+    
+    
     
     private int[] _extractedSkills(SolverAgent _sa, int _requirementsAmount)
     {
@@ -79,6 +81,11 @@ public class Group
         return false;
     }
     
+    public Challenge forWho()
+    {
+        return this._formedFor;
+    }
+    
     public Group(ArrayList<SolverAgent> _solvers, Challenge _challenge, _MODEL_SETUP _model)
     {
         this._formedFor = _challenge;
@@ -102,6 +109,7 @@ public class Group
                                 && _solvers.get(i)._isInGroup != true
                                 && _solvers.get(i)._solvedLastChallengeAsGroup != true
                                 && _solvers.get(i)._solvedLastChallenge != true
+                                && _solvers.get(i).getStats()._idledRounds < FactoryHolder._configManager.getNumberValue("SA_MAX_IDLED_ROUNDS")
                                 && i != _solvers.size())
                             {
                                 this._countCoveredRequirements(_solvers.get(i));
@@ -350,5 +358,11 @@ public class Group
             _total += _skillMap[i];
         
         return _total;
+    }
+    
+    @Override
+    public int compareTo(Group o) 
+    {
+        return o.getTotalExperience() - this.getTotalExperience();
     }
 }
