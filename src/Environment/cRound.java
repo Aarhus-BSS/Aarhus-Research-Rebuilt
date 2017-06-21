@@ -232,7 +232,8 @@ implements IRound {
     
     MatchMap _map = new MatchMap();
 
-    public void run() {
+    public void run() 
+    {
         if (!this._eradicated) {
             //for (int i = 1; i < FactoryHolder._configManager.getNumberValue("SA_EXPONENTIAL_GENERATION_CHANCE"); ++i) {
             //    this._sGenerationChanceStep();
@@ -256,8 +257,12 @@ implements IRound {
                 
                 this._match();
                 
-            } else if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("skill_based")) {
-                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Skill based game mode is not enabled in this version.");
+            } else if (FactoryHolder._configManager.getStringValue("GAME_TYPE").equals("smart_sorted")) {
+                
+                _map.Initialize(_challenge, _sAgents, MatchMap._MATCH_TYPE.TYPE_SMARTSORTED);
+                
+                this._match();
+                
             } else {
                 FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "No valid game type selected, aborting.");
             }
@@ -332,10 +337,14 @@ implements IRound {
                 _idledCh.add(this._challenge.get(o));
             }
         */
+        int _iterations = 1;
+        while (_iterations <= FactoryHolder._configManager.getNumberValue("SUBROUND_ITERATIONS"))
+        {
+            _map.ProcessMatch();
+            this.checkRageQuitters();
+            _iterations++;
+        }
         
-        _map.ProcessMatch();
-        
-        this.checkRageQuitters();
         
         if (FactoryHolder._configManager.getStringValue("ENABLE_GROUPS").equals("true")) 
         {

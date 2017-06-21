@@ -29,6 +29,7 @@ public class MatchMap implements Map<Challenge, SolverAgent>
     public enum _MATCH_TYPE 
     {
         TYPE_SORTED,
+        TYPE_SMARTSORTED,
         TYPE_RANDOM
     }
     
@@ -43,6 +44,7 @@ public class MatchMap implements Map<Challenge, SolverAgent>
     }
     
     private final Map<Challenge, SolverAgent> _map = new HashMap<>();
+    private _MATCH_TYPE _matchType = TYPE_RANDOM;
     
     private int importData(ArrayList<Challenge> _challenges, ArrayList<SolverAgent> _solvers)
     {
@@ -94,6 +96,7 @@ public class MatchMap implements Map<Challenge, SolverAgent>
     {
         switch (_type)
         {
+            case TYPE_SMARTSORTED:
             case TYPE_SORTED:
                 Collections.sort(_solvers);
                 Collections.sort(_challenges);
@@ -107,10 +110,12 @@ public class MatchMap implements Map<Challenge, SolverAgent>
                 
                 this.importData(_challenges, _solvers);
                 break;
+                
             default:
-                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Matchmaking unsupported, apparently");
+                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Matchmaking type unsupported, apparently.");
                 return;
         }
+        this._matchType = _type;
     }
     
     public MatchMap(ArrayList<Challenge> _challenges, ArrayList<SolverAgent> _solvers)
@@ -220,8 +225,14 @@ public class MatchMap implements Map<Challenge, SolverAgent>
                         sa.setSolvedLastChallenge(true);
                         sa.getStats()._idledRounds = 0;
                     } else {
-                        sa.getStats()._idledRounds++;
-                        sa.setTryHarder(sa.getTryHarded() + 1);
+                        if (this._matchType == _MATCH_TYPE.TYPE_SMARTSORTED)
+                        {
+                            // shuffle up challenges in map...
+                            
+                        } else {
+                            sa.getStats()._idledRounds++;
+                            sa.setTryHarder(sa.getTryHarded() + 1);
+                        }
                     }
                 } else {
                     sa.getStats()._idledRounds++;
