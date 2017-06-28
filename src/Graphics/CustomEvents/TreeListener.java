@@ -21,7 +21,7 @@ import javax.swing.tree.TreePath;
 /**
  *
  * @author anymol
- * http://stackoverflow.com/questions/12847904/double-click-a-jtree-node-and-get-its-name
+ * @url http://stackoverflow.com/questions/12847904/double-click-a-jtree-node-and-get-its-name
  */
 public class TreeListener extends MouseAdapter
 {

@@ -5,10 +5,6 @@
  */
 package Environment;
 
-import Agents.Properties.cSkill;
-import Agents.ProposerAgent;
-import Agents.SolverAgent;
-
 /**
  *
  * @author d3vil401

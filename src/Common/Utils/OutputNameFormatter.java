@@ -17,7 +17,7 @@ import java.util.Random;
  */
 public class OutputNameFormatter 
 {
-    private static final String[] _knownFlags = {"{DATETIME}", "{DAY}", "{HOUR}", "{SESSIONID}", "{USERNAME}", "{OS}", "{HAS_GROUPS}", "{HAS_REPUTATION}" };
+    private static final String[] _knownFlags = {"{DATETIME}", "{DAY}", "{HOUR}", "{SESSIONID}", "{USERNAME}", "{OS}", "{HAS_GROUPS}", "{HAS_REPUTATION}", "{RANDOM}" };
     
     private static String _getParameterValue(String _flag)
     {
@@ -44,6 +44,8 @@ public class OutputNameFormatter
             if (FactoryHolder._configManager.getStringValue("ENABLE_REPUTATION").equals("true"))
                 return "WithReputation";
             else return "";
+        else if (_flag.equals(_knownFlags[8]))
+            return String.valueOf(new Random().nextInt());
         
         return String.valueOf(new Random().nextInt());
     }

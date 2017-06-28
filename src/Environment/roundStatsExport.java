@@ -8,7 +8,9 @@ package Environment;
 import Agents.ProposerAgent;
 import Agents.SolverAgent;
 import Challenge.Challenge;
+import auresearch.FactoryHolder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -159,6 +161,54 @@ public class roundStatsExport
         _round._stats.setSolvedAgents(_round.getSolvedAgents().size());
     }
     
+    public static void parseGlobalStatsForGlobal(ArrayList<roundStatsHolder> _allStats, roundStatsHolder _gStatsHolder)
+    {
+        double _av = 0;
+        int _rounds = FactoryHolder._configManager.getNumberValue("MAX_ROUNDS");
+        int _divider = (_rounds * FactoryHolder._configManager.getNumberValue("MASTER_ITERATIONS"));
+        
+        _gStatsHolder.g_stdMinDevianceAVG = new double[_rounds];
+        _gStatsHolder.g_stdPlusDevianceAVG = new double[_rounds];
+        _gStatsHolder.g_stdMinDevianceAVGProblems = new double[_rounds];
+        _gStatsHolder.g_stdPlusDevianceAVGProblems = new double[_rounds];
+        _gStatsHolder.g_avgProblemsPerRound = new double[_rounds];
+        _gStatsHolder.g_avgSuccessAgentsPerRound = new double[_rounds];
+        
+        for (int i = 0; i < _rounds; i++)
+        {
+            _gStatsHolder.g_stdMinDevianceAVG[i] = 0;
+            _gStatsHolder.g_stdPlusDevianceAVG[i] = 0;
+            _gStatsHolder.g_stdMinDevianceAVGProblems[i] = 0;
+            _gStatsHolder.g_stdPlusDevianceAVGProblems[i] = 0;
+            _gStatsHolder.g_avgProblemsPerRound[i] = 0;
+        }
+        
+        for (int i = 0; i < _allStats.size(); i++)
+        {
+            for (int k = 0; k < _rounds; k++)
+            {
+                _gStatsHolder.g_avgProblemsPerRound[k]          += _allStats.get(i).g_avgProblemsPerRound[k];
+                _gStatsHolder.g_avgSuccessAgentsPerRound[k]     += _allStats.get(i).g_avgSuccessAgentsPerRound[k];
+                _gStatsHolder.g_stdMinDevianceAVG[k]            += _allStats.get(i).g_stdMinDevianceAVG[k];
+                _gStatsHolder.g_stdMinDevianceAVGProblems[k]    += _allStats.get(i).g_stdMinDevianceAVGProblems[k];
+                _gStatsHolder.g_stdPlusDevianceAVG[k]           += _allStats.get(i).g_stdPlusDevianceAVG[k];
+                _gStatsHolder.g_stdPlusDevianceAVGProblems[k]   += _allStats.get(i).g_stdPlusDevianceAVGProblems[k];
+            }
+        }
+        
+        for (int k = 0; k < _rounds; k++)
+        {
+            _gStatsHolder.g_avgProblemsPerRound[k]          /= _divider;
+            _gStatsHolder.g_avgSuccessAgentsPerRound[k]     /= _divider;
+            _gStatsHolder.g_stdMinDevianceAVG[k]            /= _divider;
+            _gStatsHolder.g_stdMinDevianceAVGProblems[k]    /= _divider;
+            _gStatsHolder.g_stdPlusDevianceAVG[k]           /= _divider;
+            _gStatsHolder.g_stdPlusDevianceAVGProblems[k]   /= _divider;
+        }
+        
+        
+    }
+    
     public static void parseGlobalStats(ArrayList<cRound> _rounds, roundStatsHolder _gStatsHolder)
     {
         double _av = 0;
@@ -199,5 +249,59 @@ public class roundStatsExport
             _gStatsHolder.g_stdMinDevianceAVGProblems[i] = (_av - _rounds.get(i)._stats._stdDevianceChallenges);
             _gStatsHolder.g_stdPlusDevianceAVGProblems[i] = (_av + _rounds.get(i)._stats._stdDevianceChallenges);
         }
+    }
+
+    public static void parseLocalStatsForGlobal(ArrayList<ArrayList<ArrayList<roundStatsHolder>>> _localAvgs, ArrayList<roundStatsHolder> _localAvg) 
+    {
+        // Thread Index: Ti
+        // Simulation Index: Si
+        // Round Index: Ri
+        
+        int _rounds = FactoryHolder._configManager.getNumberValue("MAX_ROUNDS");
+        int _divider = _rounds;//(_rounds * FactoryHolder._configManager.getNumberValue("MASTER_ITERATIONS"));
+        int _dividerPost = FactoryHolder._configManager.getNumberValue("MASTER_ITERATIONS");
+        
+        int _Ti = _localAvgs.size();
+        int _Si = _localAvgs.get(0).size();
+        int _Ri = _localAvgs.get(0).get(0).size();
+        
+        ArrayList<roundStatsHolder> _localAvgA = new ArrayList<>();
+        
+        
+        for (int Ti = 0; Ti < _localAvgs.size(); Ti++)
+        {
+            for (int Si = 0; Si < _localAvgs.get(Ti).size(); Si++)
+            {   
+                
+                
+                for (int Ri = 0; Ri < _localAvgs.get(Ti).get(Si).size(); Ri++)
+                {
+                    roundStatsHolder _slaveLocal = new roundStatsHolder();
+                    
+                    _slaveLocal._PAgentsCountPerRound       += _localAvgs.get(Ti).get(Si).get(Ri)._PAgentsCountPerRound;
+                    _slaveLocal._SAgentsCountPerRound       += _localAvgs.get(Ti).get(Si).get(Ri)._SAgentsCountPerRound;
+                    _slaveLocal._avgChallengeCountPerRound  += _localAvgs.get(Ti).get(Si).get(Ri)._avgChallengeCountPerRound;
+                    _slaveLocal._avgExpPerRound             += _localAvgs.get(Ti).get(Si).get(Ri)._avgExpPerRound;
+                    _slaveLocal._solvedAgents               += _localAvgs.get(Ti).get(Si).get(Ri)._solvedAgents;
+                    _slaveLocal._stdDevianceChallenges      += _localAvgs.get(Ti).get(Si).get(Ri)._stdDevianceChallenges;
+                    _slaveLocal._stdDevianceSAgents         += _localAvgs.get(Ti).get(Si).get(Ri)._stdDevianceSAgents;
+                    
+                    _slaveLocal._PAgentsCountPerRound       /= _divider;
+                    _slaveLocal._SAgentsCountPerRound       /= _divider;
+                    _slaveLocal._avgChallengeCountPerRound  /= _divider;
+                    _slaveLocal._avgExpPerRound             /= _divider;
+                    _slaveLocal._solvedAgents               /= _divider;
+                    _slaveLocal._stdDevianceChallenges      /= _divider;
+                    _slaveLocal._stdDevianceSAgents         /= _divider;
+                
+                    _localAvg.add(_slaveLocal);
+                }
+            }
+        }
+        
+        
+        
+        
+        
     }
 }

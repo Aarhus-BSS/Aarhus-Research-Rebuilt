@@ -9,14 +9,10 @@ import Agents.Group.Group;
 import Agents.SolverAgent;
 import Challenge.Challenge;
 import Common.Logging.ILogManager;
-import Environment.cRound;
 import auresearch.FactoryHolder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 

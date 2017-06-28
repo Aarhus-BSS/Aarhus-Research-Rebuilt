@@ -11,7 +11,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="File_NewSession">
               <Properties>
-                <Property name="text" type="java.lang.String" value="New Session"/>
+                <Property name="text" type="java.lang.String" value="Run Session"/>
                 <Property name="toolTipText" type="java.lang.String" value="Creates a new session."/>
               </Properties>
               <Events>
@@ -26,6 +26,11 @@
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="Menu_Sep1">
             </MenuItem>
+            <Menu class="javax.swing.JMenu" name="jMenu1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Import Scenario"/>
+              </Properties>
+            </Menu>
             <Menu class="javax.swing.JMenu" name="Menu_ExportMenu">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Export"/>

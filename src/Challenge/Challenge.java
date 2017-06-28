@@ -8,7 +8,6 @@ import Agents.ProposerAgent;
 import Agents.SolverAgent;
 import static Challenge.Challenge.COMPARATOR_SWITCH_TYPE.COMPARATOR_HIGHEST_TO_LOWEST;
 import static Challenge.Challenge.COMPARATOR_SWITCH_TYPE.COMPARATOR_LOWEST_TO_HIGHEST;
-import Common.Configuration.ConfigManager;
 import Common.Logging.ILogManager;
 import Common.Math.SigmoidedThrows;
 import auresearch.FactoryHolder;
@@ -31,7 +30,6 @@ public class Challenge implements Comparable<Challenge>
     private Random _random = new Random();
     private ArrayList<SolverAgent> _solvers = new ArrayList();
     private ArrayList<SolverAgent> _tryHarders = new ArrayList();
-    private ArrayList<SolverAgent> _tryHarderRejected = new ArrayList();
     private boolean _isSolved = false;
     public int _idledRounds = 0;
     public boolean _isGroupSolved = false;

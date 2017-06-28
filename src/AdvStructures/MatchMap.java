@@ -14,7 +14,6 @@ import auresearch.FactoryHolder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,7 +56,7 @@ public class MatchMap implements Map<Challenge, SolverAgent>
             for (i = 0; i < (_solvers.size()); i++)
                 this._map.put(_challenges.get(i), _solvers.get(i));
             
-            for (int k = i; k < _challenges.size(); k++)
+            for (int k = i + 1; k < _challenges.size(); k++)
                 _challenges.get(k)._idledRounds++;
             
         } else if (_difference < 0) {
@@ -66,7 +65,7 @@ public class MatchMap implements Map<Challenge, SolverAgent>
             for (i = 0; i < (_challenges.size()); i++)
                 this._map.put(_challenges.get(i), _solvers.get(i));
             
-            for (int k = i; k < _solvers.size(); k++)
+            for (int k = i + 1; k < _solvers.size(); k++)
                 _solvers.get(k).getStats()._idledRounds++;
             
         } else {
@@ -209,6 +208,7 @@ public class MatchMap implements Map<Challenge, SolverAgent>
     {
         for (Map.Entry pair : this._map.entrySet()) 
         {
+            Iterator iter = this._map.entrySet().iterator();
             SolverAgent sa = (SolverAgent)pair.getValue();
             Challenge ch = (Challenge)pair.getKey();
             
@@ -227,7 +227,6 @@ public class MatchMap implements Map<Challenge, SolverAgent>
                     } else {
                         if (this._matchType == _MATCH_TYPE.TYPE_SMARTSORTED)
                         {
-                            // shuffle up challenges in map...
                             
                         } else {
                             sa.getStats()._idledRounds++;
@@ -239,7 +238,8 @@ public class MatchMap implements Map<Challenge, SolverAgent>
                     ch._idledRounds++;
                 }
             } else 
-                FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "There a challenge or a solver who has solved flag active...not supposed to be like this!");
+                if (FactoryHolder._configManager.getNumberValue("SUBROUND_ITERATIONS") <= 1)
+                    FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "There a challenge or a solver who has solved flag active...not supposed to be like this!");
         }
         
         return 0;

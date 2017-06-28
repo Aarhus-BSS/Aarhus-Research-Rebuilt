@@ -5,8 +5,6 @@
  */
 package Agents.Properties;
 
-import auresearch.FactoryHolder;
-
 /**
  *
  * @author d3vil401
@@ -51,16 +49,7 @@ public class cSkill implements ISkill
     @Override
     public void _tick() 
     {
-        // TODO:
-        // _tick is a function that performs all the automated tasks: checking if experience is enough for a new grade, etc...
-        // it is perfect for a thread, but Skill is not an entity but a property.
-        //int _currentGradeLimitExp = (int)FactoryHolder._configManager.getArrayValue("GRADE_TABLE").get(this._skillGrade);
         
-        //if (this._skillExp > _currentGradeLimitExp)
-        //{
-        //    this._skillGrade++;
-        //    this._skillExp = _currentGradeLimitExp - this._skillExp;
-        //}
     }
     
     public cSkill(String _name)

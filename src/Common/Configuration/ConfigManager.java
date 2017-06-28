@@ -14,12 +14,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -76,10 +73,16 @@ public class ConfigManager
                         this._gotError = true;
                         return;
                     }
-
-                    // If it has 2 entries AND contains ',' then we have multiple values (array).
-                    if (_entrySplit[1].contains(","))
+                    
+                    // Quoted string, used in scenario names.
+                    if (_entrySplit[1].contains("\""))
                     {
+                        String _paramName = _entrySplit[0];
+                        _entrySplit = _entrySplit[1].split("\"");
+                        this._params.put(_paramName, _entrySplit[1]);
+                        
+                    } else if (_entrySplit[1].contains(",")) {
+                        
                         // It's an array configuration, we need to split some more.
                         _slaveList = new ArrayList<>();
 
@@ -98,6 +101,18 @@ public class ConfigManager
             }
         }
         br.close();
+    }
+    
+    public ConfigManager(File _file) throws IOException
+    {
+        this._file = _file;
+        if (!this._file.exists() || !this._file.canRead())
+        {
+            FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_WARNING, "Can't read configuration file, setting up with default development settings.");
+            this._setupDefaultSettings();
+        } else {
+            this._importConfiguration();
+        }
     }
     
     public ConfigManager() throws IOException

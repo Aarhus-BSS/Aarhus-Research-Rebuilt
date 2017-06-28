@@ -6,22 +6,15 @@
  */
 package Environment;
 
-import Agents.Group.Group;
 import Agents.Properties.cSkill;
-import Agents.Properties.cStatistics;
 import Agents.ProposerAgent;
 import Agents.SolverAgent;
 import Challenge.Challenge;
-import Common.Configuration.ConfigManager;
+import Common.Logging.ILogManager;
 import Common.Utils.OutputNameFormatter;
-import Environment.cRound;
-import Environment.graphStatsExport;
-import Environment.roundStatsExport;
-import Environment.roundStatsHolder;
 import Graphics.GraphicManager.ReportManager.ReportCompiler;
 import auresearch.FactoryHolder;
 import java.util.ArrayList;
-import org.jfree.chart.ChartPanel;
 
 public class RoundManager {
     private ArrayList<cRound> _rounds = new ArrayList();
@@ -67,14 +60,37 @@ public class RoundManager {
         this._detailData.addContent(new Object[]{this._SAgents.size(), this._PAgents.size(), FactoryHolder._configManager.getNumberValue("SA_MAXIMUM_EXPERIENCE"), this._roundBound, "Sorted", FactoryHolder._configManager.getFloatValue("DEADLINE"), 1, 1, 1, 1});
         this._detailData.end();
     }
+    
+    public ArrayList<roundStatsHolder> getLocalStats()
+    {
+        ArrayList<roundStatsHolder> _statsHolder = new ArrayList<>();
+        for (cRound r: this._rounds)
+            _statsHolder.add(r._stats);
+        
+        return _statsHolder;
+    }
+    
+    public roundStatsHolder getGlobalStats()
+    {
+        return this._globalStats;
+    }
 
     public void end() {
         roundStatsExport.parseGlobalStats(this._rounds, this._globalStats);
-        this._agentData.end();
-        this._problemData.end();
-        this._avgData.end();
-        this._compositeData.end();
-        FactoryHolder._graphsRender = graphStatsExport.renderGraphs(this._rounds, this._globalStats);
+        if (FactoryHolder._configManager.getStringValue("MODE").equals("console")) {
+            
+            //FactoryHolder._graphRenders.add(graphStatsExport.renderGraphs(this._rounds, this._globalStats));
+            
+            FactoryHolder._graphsRender = graphStatsExport.renderGraphs(this._rounds, this._globalStats);
+            
+        } else {
+            
+            this._agentData.end();
+            this._problemData.end();
+            this._avgData.end();
+            this._compositeData.end();
+            FactoryHolder._graphsRender = graphStatsExport.renderGraphs(this._rounds, this._globalStats);
+        }
     }
 
     public RoundManager(int _roundBound, ArrayList<SolverAgent> _SAPool, ArrayList<ProposerAgent> _PAPool) {
@@ -140,29 +156,22 @@ public class RoundManager {
         return this._roundCounter == 1;
     }
 
-    public void runLoop() {
-        while (this.hasNext()) {
-            if (this.isFirstRound()) {
-                this._rounds.add(new cRound(this._roundCounter, this._SAgents, this._PAgents));
-            } else {
-                this._rounds.add(new cRound(this._roundCounter, this._SAgents, this._PAgents, this._Challenges));
-            }
-            this._rounds.get(this._roundCounter - 1).run();
-            roundStatsExport.parseStats(this._rounds.get(this._roundCounter - 1));
-            this._SAgents = this._rounds.get(this._roundCounter - 1).getSolverAgents();
-            this._PAgents = this._rounds.get(this._roundCounter - 1).getProposerAgents();
-            this._Challenges = this._rounds.get(this._roundCounter - 1).getChallanges();
-            this._compileReportEntries(this._roundCounter++);
-        }
+    public void runLoop() 
+    {
+        while (this.hasNext()) 
+            this.runNextRound();
     }
 
-    public void runNextRound() {
-        if (this.hasNext()) {
-            if (this.isFirstRound()) {
+    public void runNextRound() 
+    {
+        if (this.hasNext()) 
+        {
+            FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Running round " + this._roundCounter + ".");
+            if (this.isFirstRound())
                 this._rounds.add(new cRound(this._roundCounter, this._SAgents, this._PAgents));
-            } else {
+            else
                 this._rounds.add(new cRound(this._roundCounter, this._SAgents, this._PAgents, this._Challenges));
-            }
+            
             this._rounds.get(this._roundCounter - 1).run();
             roundStatsExport.parseStats(this._rounds.get(this._roundCounter - 1));
             this._SAgents = (ArrayList)this._rounds.get(this._roundCounter - 1).getSolverAgents().clone();

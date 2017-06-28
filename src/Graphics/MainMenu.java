@@ -7,25 +7,20 @@ package Graphics;
 
 import Common.Logging.ILogManager;
 import Common.MsgBoxer.MBox;
+import Common.PresetLoader.PresetLoader;
 import Environment.RoundManager;
 import Environment.graphStatsExport;
 import Graphics.CustomEvents.TreeListener;
-import Graphics.GraphicManager.GraphTypeHandler;
-import Graphics.GraphicManager.ReportManager.ReportCompiler;
 import auresearch.FactoryHolder;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenuItem;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeSelectionModel;
 import org.jfree.chart.ChartPanel;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.YIntervalSeries;
 
 /**
  *
@@ -38,6 +33,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
      */
     private TreeListener _tListener = null;
     private RoundManager _rm = null;
+    private String[]     _scenarioImportNames = null;
     
     private DefaultMutableTreeNode _root = new DefaultMutableTreeNode("Rounds List");
     
@@ -57,6 +53,16 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         //this.roundList.setEditable(true);
         //this.roundList.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         //this.roundList.setShowsRootHandles(true);
+        if (PresetLoader.getListSize() != 0) {
+            this._scenarioImportNames = PresetLoader.getNameList();
+            
+            for (String _name: this._scenarioImportNames)
+            {
+                JMenuItem _newItem = new JMenuItem(new scenarioEventHandler(_name));
+                
+                this.jMenu1.add(_newItem);
+            }
+        }
     }
 
     /**
@@ -85,6 +91,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         File_NewSession = new javax.swing.JMenuItem();
         File_CloseSession = new javax.swing.JMenuItem();
         Menu_Sep1 = new javax.swing.JPopupMenu.Separator();
+        jMenu1 = new javax.swing.JMenu();
         Menu_ExportMenu = new javax.swing.JMenu();
         ExportMenu_XLS = new javax.swing.JMenuItem();
         ExportMenu_PDF = new javax.swing.JMenuItem();
@@ -235,7 +242,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
 
         Menu_File.setText("File");
 
-        File_NewSession.setText("New Session");
+        File_NewSession.setText("Run Session");
         File_NewSession.setToolTipText("Creates a new session.");
         File_NewSession.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -248,6 +255,9 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
         File_CloseSession.setToolTipText("Close current session.");
         Menu_File.add(File_CloseSession);
         Menu_File.add(Menu_Sep1);
+
+        jMenu1.setText("Import Scenario");
+        Menu_File.add(jMenu1);
 
         Menu_ExportMenu.setText("Export");
         Menu_ExportMenu.setToolTipText("");
@@ -386,6 +396,8 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
             this.jLabel3.setText("0 Years / " + FactoryHolder._configManager.getNumberValue("MAX_ROUNDS") + " Years");
             
             new Thread(this).start();
+            
+            
         } catch (IOException ex) {
             FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, "Couldn't reload configuration: " + ex.getMessage());
         }
@@ -518,6 +530,8 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
             this.Graph_ActivityMonitor8.validate();
                 
         }
+        
+        PresetLoader.revert();
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -541,6 +555,7 @@ public class MainMenu extends javax.swing.JDialog implements Runnable {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenu;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;

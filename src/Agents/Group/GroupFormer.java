@@ -8,6 +8,7 @@ package Agents.Group;
 import AdvStructures.GroupMatchMap;
 import Agents.SolverAgent;
 import Challenge.Challenge;
+import Common.Logging.ILogManager;
 import auresearch.FactoryHolder;
 import java.util.ArrayList;
 
@@ -68,33 +69,39 @@ public class GroupFormer
             this._saturationScore = 0;
         });
         
-        for (int _challengeIndex = 0; _challengeIndex < _challenges.size(); _challengeIndex++) 
-        {
-            
-            if (!_challenges.get(_challengeIndex).isSolved())
+        if (_solvers.isEmpty() || _challenges.isEmpty())
+            FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_WARNING, "One of the rounds has empty challenges/solvers with no-solved flag, group round is skipped.");
+        else {
+            for (int _challengeIndex = 0; _challengeIndex < _challenges.size(); _challengeIndex++) 
             {
-                while (!this._saturedPool())
+
+                if (!_challenges.get(_challengeIndex).isSolved())
                 {
-                    _formation.add(new Group(_solvers, _challenges.get(_challengeIndex), _MODEL_SETUP.fromString(FactoryHolder._configManager.getStringValue("GROUP_MODEL"))));
-                    
-                    if (_formation.get(_formation.size() - 1)._satured()) {
-                        this._saturationScore++;
-                        _formation.remove(_formation.size() - 1);
+                    while (!this._saturedPool())
+                    {
+                        _formation.add(new Group(_solvers, _challenges.get(_challengeIndex), _MODEL_SETUP.fromString(FactoryHolder._configManager.getStringValue("GROUP_MODEL"))));
+
+                        if (_formation.get(_formation.size() - 1)._satured()) {
+                            this._saturationScore++;
+                            _formation.remove(_formation.size() - 1);
+                        }
+
+                        if (this._saturationScore >= this._getSaturationLimit(_solvers))
+                            break;
                     }
-                    
-                    if (this._saturationScore >= this._getSaturationLimit(_solvers))
-                        break;
+
+                    this._groupsArray.add(_formation);
+                    _formation.clear();
                 }
-                
-                this._groupsArray.add(_formation);
-                _formation.clear();
+            }
+        
+            if (this._groupsArray.size() > 0) {
+                this._map = new GroupMatchMap(this._challenges, this._groupsArray);
+                this._isReady = true;
             }
         }
         
-        if (this._groupsArray.size() > 0)
-            this._map = new GroupMatchMap(this._challenges, this._groupsArray);
         
-        this._isReady = true;
     }
     
     public boolean processMatch()

@@ -11,6 +11,6 @@ package auresearch;
  */
 public class Globals 
 {
-    public static final int _softwareVersion = 2;
+    public static final int _softwareVersion = 4;
     
 }

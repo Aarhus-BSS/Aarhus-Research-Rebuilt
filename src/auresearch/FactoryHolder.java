@@ -2,8 +2,8 @@ package auresearch;
 
 import Common.Configuration.ConfigManager;
 import Common.Logging.ILogManager;
-import Common.Lua.LuaManager;
 import Graphics.GraphicManager.GraphicManager;
+import PictureManipulation.PictureMerger;
 import org.jfree.chart.ChartPanel;
 
 /*
@@ -25,8 +25,6 @@ public class FactoryHolder
     */
     // Logs
     public static ILogManager       _logManager = null;
-    // Scripting Engine
-    public static LuaManager        _luaManager = null;
     // Graphics generator engine
     public static GraphicManager    _graphicManager = new GraphicManager();
     // Configuration engine
@@ -38,9 +36,12 @@ public class FactoryHolder
         "DetailReport.{DATETIME}-{HAS_GROUPS}", "CompositeReport.{DATETIME}-{HAS_GROUPS}",
         "GroupReport.{DATETIME}-{HAS_GROUPS}"};
     
-    public static String[] _graphNames = {"AVGAgentsPerRound.{DATETIME}-{HAS_GROUPS}.png", 
-        "AgentsPerRound.{DATETIME}-{HAS_GROUPS}.png", "SAgentsSolvedPerRound.{DATETIME}-{HAS_GROUPS}.png", 
-        "CompositeEXP.{DATETIME}-{HAS_GROUPS}.png", "CompositeProblems.{DATETIME}-{HAS_GROUPS}.png" };
+    public static String[] _graphNames = {"AVGAgentsPerRound.{DATETIME}-{HAS_GROUPS}.{RANDOM}.png", 
+        "AgentsPerRound.{DATETIME}-{HAS_GROUPS}.{RANDOM}.png", "SAgentsSolvedPerRound.{DATETIME}-{HAS_GROUPS}.{RANDOM}.png", 
+        "CompositeEXP.{DATETIME}-{HAS_GROUPS}.{RANDOM}.png", "CompositeProblems.{DATETIME}-{HAS_GROUPS}.{RANDOM}.png" };
+    
+    public static PictureMerger _agentsCount    = new PictureMerger();
+    public static PictureMerger _compositeChart = new PictureMerger();
     
     public static ChartPanel[] _graphsRender = null;
     
@@ -48,6 +49,7 @@ public class FactoryHolder
     
     public static void destroy()
     {
-        _logManager.destroySession();
+        //_logManager.print(ILogManager._LOG_TYPE.TYPE_INFORMATION, "Destroying everything.");
+        //_logManager.destroySession();
     }
 }

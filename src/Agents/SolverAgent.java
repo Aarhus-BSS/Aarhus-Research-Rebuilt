@@ -28,6 +28,7 @@ public class SolverAgent implements Comparable<SolverAgent>
     public boolean _isInGroup = false;
     public boolean _solvedLastChallengeAsGroup = false;
     public int _reputationScore = 0;
+    public int _failedMeet = 0;
     public COMPARATOR_SWITCH_TYPE _comparatorType = COMPARATOR_HIGHEST_TO_LOWEST;
 
     public void _setupAgent() 
