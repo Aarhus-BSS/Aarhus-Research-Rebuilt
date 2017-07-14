@@ -31,10 +31,11 @@ public class FactoryHolder
     public static ConfigManager     _configManager = null;
     
     // Documentation (XLS & Graphics) are going to follow these names, pay attention to the flags {}
-    public static String[] _docNames = {"ProblemsReport.{DATETIME}-{HAS_GROUPS}", 
-        "AgentReport.{DATETIME}-{HAS_GROUPS}", "AVGReport.{DATETIME}-{HAS_GROUPS}", 
-        "DetailReport.{DATETIME}-{HAS_GROUPS}", "CompositeReport.{DATETIME}-{HAS_GROUPS}",
-        "GroupReport.{DATETIME}-{HAS_GROUPS}"};
+    // Malte EDIT: Added the random tag to make sure it doesnt overwrite itself for multiple runs
+    public static String[] _docNames = {"ProblemsReport.{DATETIME}-{HAS_GROUPS}.{RANDOM}", 
+        "AgentReport.{DATETIME}-{HAS_GROUPS}.{RANDOM}", "AVGReport.{DATETIME}-{HAS_GROUPS}.{RANDOM}", 
+        "DetailReport.{DATETIME}-{HAS_GROUPS}.{RANDOM}", "CompositeReport.{DATETIME}-{HAS_GROUPS}.{RANDOM}",
+        "GroupReport.{DATETIME}-{HAS_GROUPS}.{RANDOM}"};
     
     public static String[] _graphNames = {"AVGAgentsPerRound.{DATETIME}-{HAS_GROUPS}.{RANDOM}.png", 
         "AgentsPerRound.{DATETIME}-{HAS_GROUPS}.{RANDOM}.png", "SAgentsSolvedPerRound.{DATETIME}-{HAS_GROUPS}.{RANDOM}.png", 

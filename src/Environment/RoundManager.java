@@ -81,6 +81,11 @@ public class RoundManager {
             
             //FactoryHolder._graphRenders.add(graphStatsExport.renderGraphs(this._rounds, this._globalStats));
             
+            // Malte EDIT: cpied this from the library mode code
+            this._agentData.end();
+            this._problemData.end();
+            this._avgData.end();
+            this._compositeData.end();
             FactoryHolder._graphsRender = graphStatsExport.renderGraphs(this._rounds, this._globalStats);
             
         } else {
@@ -142,10 +147,11 @@ public class RoundManager {
             if (Float.parseFloat(_slave.compositeExperience()) <= 1.0f) continue;
             this._agentData.addContent(new Object[]{_round + 1, _slave.toString(), this._compileSkillMap(_slave.getSkills()), _slave.getTotalExperience(), _slave.compositeExperience(), _slave.getStats()._money, _slave.getHasSolvedLastChallenge(), this._compileWasInGroup(_slave), this._compileHasRejected(_slave)});
         }
-        for (i = 0; i < this._rounds.get(_round - 1).getDeadSolvers().size(); ++i) {
-            _slave = this._rounds.get(_round - 1).getDeadSolvers().get(i);
-            this._agentData.addContent(new Object[]{_round + 1, _slave.toString(), this._compileSkillMap(_slave.getSkills()), _slave.getTotalExperience(), _slave.compositeExperience(), _slave.getStats()._money, _slave.getHasSolvedLastChallenge(), this._compileWasInGroup(_slave), this._compileHasRejected(_slave)});
-        }
+        // MALTE EDIT: Don't add dead solvers to the data ..
+//        for (i = 0; i < this._rounds.get(_round - 1).getDeadSolvers().size(); ++i) {
+//            _slave = this._rounds.get(_round - 1).getDeadSolvers().get(i);
+//            this._agentData.addContent(new Object[]{_round + 1, _slave.toString(), this._compileSkillMap(_slave.getSkills()), _slave.getTotalExperience(), _slave.compositeExperience(), _slave.getStats()._money, _slave.getHasSolvedLastChallenge(), this._compileWasInGroup(_slave), this._compileHasRejected(_slave)});
+//        }
         this._compositeData.addContent(new Object[]{_round + 1, this._rounds.get(_round - 1).getSolverAgents().size(), this._rounds.get((int)(_round - 1))._stats._stdDevianceSAgents, this._rounds.get(_round - 1).getChallanges().size(), this._rounds.get((int)(_round - 1))._stats._stdDevianceChallenges, this._rounds.get((int)(_round - 1))._stats._avgChallengeCountPerRound, this._rounds.get((int)(_round - 1))._stats._avgExpPerRound});
         //for (Group group : this._rounds.get(_round - 1).getGroups()) {
         //    this._groupData.addContent(new Object[]{_round + 1, group.getSolvedChallenge(), group.getMembers()[0] + ", " + group.getMembers()[1], group.hasSolvedAChallenge(), group.getTotalExp()});

@@ -44,6 +44,8 @@ public class Challenge implements Comparable<Challenge>
     }
 
     private void _calculateTotalDifficulty() {
+        // Malte EDIT: reset this counter ...
+        this._totalDifficulty = 0;
         for (int i = 0; i < this._getBound(); ++i) {
             this._totalDifficulty += this._difficultyMap[i];
         }
