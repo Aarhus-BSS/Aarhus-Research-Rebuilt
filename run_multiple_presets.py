@@ -41,7 +41,7 @@ BASE_SETTINGS = {'sigmoid': 'dicethrow',
                  'sa_max': 100,
                  'n_skill': 4,
                  'n_reqs': 4,
-                 'agent_generation_probability': 3,
+                 'agent_generation_probability': 33,
                  'agent_generation_chances': 3,
                  'OUTPUT_FOLDER': OUTPUT_FOLDER}
 
@@ -326,7 +326,7 @@ for run_settings in itertools.product(*COMBINATIONS):
         with open(os.path.join(wd, "options.cfg"), "w") as f:
             f.write(base.format(**params))
         # call the program
-        # java -Xmx 1500m -jar AUResearch-Exp.jar
+        # java -Xmx 1536m -jar AUResearch-Exp.jar
         try: 
             call(["java", 
                   "-Xmx1500m", 
