@@ -329,7 +329,7 @@ for run_settings in itertools.product(*COMBINATIONS):
         # java -Xmx 1536m -jar AUResearch-Exp.jar
         try: 
             call(["java", 
-                  "-Xmx1500m", 
+                  "-Xmx1536m", 
                   "-jar",
                   os.path.join(wd, "dist", "AUResearch-Exp.jar")],  timeout=TIMEOUT)
             
