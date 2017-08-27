@@ -34,6 +34,11 @@ public class ProposerAgent {
             _difficultyMap[i] = 0;
         }
         
+        if (FactoryHolder._configManager.getNumberValue("MAXIMUM_RANDOM_REQUIREMENTS_SELECTED") > FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size()) {
+            FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_WARNING, "Maximum random requirements selected of a problem is more than the number of skills, automatically adjusting.");
+            FactoryHolder._configManager.changeParameterValue("MAXIMUM_RANDOM_REQUIREMENTS_SELECTED", FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size());
+        }
+        
         for (i = 0; i < FactoryHolder._configManager.getNumberValue("MAXIMUM_RANDOM_REQUIREMENTS_SELECTED"); ++i) {
             int _randomAccessSkill = this._random.nextInt(FactoryHolder._configManager.getArrayValue("AGENT_SKILLS").size());
             _difficultyMap[i] = this._random.nextInt((FactoryHolder._configManager.getNumberValue("MAXIMUM_RANDOM_EXPERIENCE_PER_REQUIREMENT") -

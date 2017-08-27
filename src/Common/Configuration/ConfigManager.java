@@ -79,6 +79,7 @@ public class ConfigManager
                     {
                         String _paramName = _entrySplit[0];
                         _entrySplit = _entrySplit[1].split("\"");
+                        
                         this._params.put(_paramName, _entrySplit[1]);
                         
                     } else if (_entrySplit[1].contains(",")) {
@@ -93,8 +94,17 @@ public class ConfigManager
 
                         this._params.put(_entrySplit[0], _slaveList);
                         FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Added parameter " + _entrySplit[0] + " as array values " + _entrySplit[1]);
+                    
                     } else {
-                        this._params.put(_entrySplit[0], _entrySplit[1]);
+                        
+                        if (_entrySplit[0].toLowerCase().equals("agent_skills")) {
+                            // FIX: single skill for AGENT_SKILLS was not an ArrayList as it was intended when using a single skill, therefore forcefully return an arraylist for 1 value only.
+                            ArrayList<String> _slave = new ArrayList<>();
+                            _slave.add(_entrySplit[1]);
+                            this._params.put(_entrySplit[0], _slave);
+                        } else 
+                            this._params.put(_entrySplit[0], _entrySplit[1]);
+                        
                         FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_DEBUG, "Added parameter " + _entrySplit[0] + " as value " + _entrySplit[1]);
                     }
                 }
@@ -171,5 +181,16 @@ public class ConfigManager
         
         FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, _key + " not found");
         return null;
+    }
+    
+    public <T> void changeParameterValue(String _key, T _value) 
+    {
+        for (Map.Entry<String, Object> entry : this._params.entrySet())
+            if (entry.getKey().toLowerCase().equals(_key.toLowerCase())) {
+                this._params.replace(_key, _value);
+                return;
+            }
+        
+        FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_ERROR, _key + " not found");
     }
 }
