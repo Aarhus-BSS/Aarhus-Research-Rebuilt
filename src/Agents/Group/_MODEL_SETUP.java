@@ -28,9 +28,9 @@ public enum _MODEL_SETUP
             case "1A":
                 return MODEL_1A;
             case "1B":
-                return MODEL_1B;
+                return MODEL_1A;
             case "1A_WR":
-                return MODEL_1A_WR;
+                return MODEL_1B_WR;
             case "1B_WR":
                 return MODEL_1B_WR;
                 

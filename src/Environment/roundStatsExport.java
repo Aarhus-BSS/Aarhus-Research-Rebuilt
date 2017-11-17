@@ -8,6 +8,7 @@ package Environment;
 import Agents.ProposerAgent;
 import Agents.SolverAgent;
 import Challenge.Challenge;
+import Common.Logging.ILogManager;
 import auresearch.FactoryHolder;
 import java.util.ArrayList;
 import java.util.List;
@@ -187,12 +188,19 @@ public class roundStatsExport
         {
             for (int k = 0; k < _rounds; k++)
             {
-                _gStatsHolder.g_avgProblemsPerRound[k]          += _allStats.get(i).g_avgProblemsPerRound[k];
-                _gStatsHolder.g_avgSuccessAgentsPerRound[k]     += _allStats.get(i).g_avgSuccessAgentsPerRound[k];
-                _gStatsHolder.g_stdMinDevianceAVG[k]            += _allStats.get(i).g_stdMinDevianceAVG[k];
-                _gStatsHolder.g_stdMinDevianceAVGProblems[k]    += _allStats.get(i).g_stdMinDevianceAVGProblems[k];
-                _gStatsHolder.g_stdPlusDevianceAVG[k]           += _allStats.get(i).g_stdPlusDevianceAVG[k];
-                _gStatsHolder.g_stdPlusDevianceAVGProblems[k]   += _allStats.get(i).g_stdPlusDevianceAVGProblems[k];
+                if (_allStats != null && _gStatsHolder != null) {
+                    _gStatsHolder.g_avgProblemsPerRound[k]          += _allStats.get(i).g_avgProblemsPerRound[k];
+                    _gStatsHolder.g_avgSuccessAgentsPerRound[k]     += _allStats.get(i).g_avgSuccessAgentsPerRound[k];
+                    _gStatsHolder.g_stdMinDevianceAVG[k]            += _allStats.get(i).g_stdMinDevianceAVG[k];
+                    _gStatsHolder.g_stdMinDevianceAVGProblems[k]    += _allStats.get(i).g_stdMinDevianceAVGProblems[k];
+                    _gStatsHolder.g_stdPlusDevianceAVG[k]           += _allStats.get(i).g_stdPlusDevianceAVG[k];
+                    _gStatsHolder.g_stdPlusDevianceAVGProblems[k]   += _allStats.get(i).g_stdPlusDevianceAVGProblems[k];
+                } else {
+                    if (_allStats == null) 
+                        FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_CRITICAL, "allStats is a null pointer, TO DEBUG!");
+                    if (_gStatsHolder == null) 
+                        FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_CRITICAL, "allStats is a null pointer, TO DEBUG!");
+                }
             }
         }
         
@@ -272,7 +280,6 @@ public class roundStatsExport
         {
             for (int Si = 0; Si < _localAvgs.get(Ti).size(); Si++)
             {   
-                
                 
                 for (int Ri = 0; Ri < _localAvgs.get(Ti).get(Si).size(); Ri++)
                 {

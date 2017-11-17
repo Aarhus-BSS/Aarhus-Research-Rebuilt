@@ -5,6 +5,7 @@
  */
 package auresearch;
 
+import Common.Configuration.ConfigManager;
 import Common.Logging.ILogManager;
 import Common.PresetLoader.PresetLoader;
 import Environment.graphStatsExport;
@@ -47,7 +48,7 @@ public class ModeSwitcher
     }
     
     // Checks which mode has been specified inside the configuration file, loweing the cases for a better general comparation.
-    public static void start(String _mode)
+    public static void start(String _mode) throws IOException
     {
         if (_mode.toLowerCase().equals(Mode.MODE_LIBRARY.toString()))
             _startAsLibrary();
@@ -101,8 +102,9 @@ public class ModeSwitcher
     }
     
     // As console, the one we said we just start and outputs the graphics via the bash script.
-    private static void _startAsConsole()
+    private static void _startAsConsole() throws IOException
     {
+        FactoryHolder._configManager = new ConfigManager();
         FactoryHolder._logManager.print(ILogManager._LOG_TYPE.TYPE_NORMAL, "Console mode has been requested, prepare your CPU!");
         
         int _masterRuns = FactoryHolder._configManager.getNumberValue("MASTER_ITERATIONS");
